@@ -45,7 +45,8 @@ public class Starship extends ExplodingGameObject {
 		int shotDelay = Integer.parseInt(template.getProperty("shotDelay"));
 		String ammo=template.getProperty("ammo");
 		guns=new ArrayList<>();
-		guns.add(new Gun(new Missile(new Image("res/missile 1.png"),1.2f,1f,1,.5f),shotDelay));
+		guns.add(new Gun(new Missile(new Image("res/missile 1.png"),1.2f,1f,3,.5f),4000));
+		guns.add(new Gun(new Projectile(new Image("res/Beam1.png"),30f,.5f),500));
 		ObjectImage = iconEnginesOff;
 		alive = true;
 		collisionModel = new Circle(pos.getX(), pos.getY(), height / 2);

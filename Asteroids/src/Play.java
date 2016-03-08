@@ -177,7 +177,9 @@ public class Play extends BasicGameState {
 			isPaused = !isPaused;
 			return;
 		} // pause the game when player presses 'P'
-		if (in.isKeyPressed(Input.KEY_SPACE))
+		if (in.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON))
+			ship.shoot(1); // fire ship guns when player presses Spacebar
+		if (in.isMouseButtonDown(Input.MOUSE_RIGHT_BUTTON))
 			ship.shoot(0); // fire ship guns when player presses Spacebar
 		if (in.isKeyDown(Input.KEY_W))
 			ship.ForwardKeyPressed();
