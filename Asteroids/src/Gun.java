@@ -31,7 +31,6 @@ public class Gun implements UpdatingObject {
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g){
 		for (GameObject b : bullets) {
 			b.render(gc, sbg, g);
-			System.out.println(b);
 		}
 		
 	}

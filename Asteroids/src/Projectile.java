@@ -9,7 +9,7 @@ public class Projectile extends GameObject implements UpdatingObject{
 	private double lived = 0;	
 	private double maxLifeTime;
 	float launchVelocity;
-	private Projectile(Vector2f pos, double rotation, Image laserImage,float launchVelocity,double maxLifeTime){
+	protected Projectile(Vector2f pos, double rotation, Image laserImage,float launchVelocity,double maxLifeTime){
 		super(pos,new Vector2f(rotation).scale(launchVelocity),40,20);
 		this.maxLifeTime=maxLifeTime;
 		this.launchVelocity=launchVelocity;
