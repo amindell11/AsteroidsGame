@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -36,8 +37,13 @@ public class Gun implements UpdatingObject {
 	}
 	public void update(GameContainer gc, StateBasedGame sbg, int delta){
 		timeSinceFired+=delta;
-		for(GameObject p:bullets){
+		Iterator<GameObject> j = bullets.iterator();
+		while (j.hasNext()) {
+			GameObject p = j.next();
 			p.update(gc, sbg, delta);
+			if (!p.isActive()) {
+				j.remove();
+			}
 		}
 	}
 	

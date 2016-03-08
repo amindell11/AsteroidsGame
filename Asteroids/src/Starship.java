@@ -21,7 +21,7 @@ public class Starship extends ExplodingGameObject {
 	private boolean accelerating, turningLeft, turningRight;
 	private Image iconEnginesOff;
 	private Image iconEnginesOn;
-	Gun guns;
+	private ArrayList<Gun> guns;
 
 	// Default position at the center of the screen
 	public Starship(String config) throws SlickException {
@@ -44,7 +44,8 @@ public class Starship extends ExplodingGameObject {
 		turnSpeed=Float.parseFloat(template.getProperty("turnSpeed"));
 		int shotDelay = Integer.parseInt(template.getProperty("shotDelay"));
 		String ammo=template.getProperty("ammo");
-		guns = new Gun(new Missile(new Image("res/missile 1.png"),1f,1f,1,.5f),shotDelay);
+		guns=new ArrayList<>();
+		guns.add(new Gun(new Missile(new Image("res/missile 1.png"),1.2f,1f,1,.5f),shotDelay));
 		ObjectImage = iconEnginesOff;
 		alive = true;
 		collisionModel = new Circle(pos.getX(), pos.getY(), height / 2);
@@ -53,7 +54,9 @@ public class Starship extends ExplodingGameObject {
 	// RENDER
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) {
 		if (alive) {
-			guns.render(gc, sbg, g);
+			for(Gun gun:guns){
+				gun.render(gc, sbg, g);
+			}
 		}
 		super.render(gc, sbg, g);
 
@@ -69,7 +72,9 @@ public class Starship extends ExplodingGameObject {
 
 	// UPDATE
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) {
-		guns.update(gc, sbg, delta);
+		for(Gun gun:guns){
+			gun.update(gc, sbg, delta);
+		}
 		if (alive) {
 			if (turningLeft)
 				rotate((float) -turnSpeed * delta);
@@ -88,8 +93,8 @@ public class Starship extends ExplodingGameObject {
 		super.update(gc, sbg, delta);
 	}
 
-	public void shoot() {
-			guns.shoot(pos.getX() + width / 2, pos.getY() + height / 2,
+	public void shoot(int gunIndex) {
+			guns.get(gunIndex).shoot(pos.getX() + width / 2, pos.getY() + height / 2,
 					getRotation());
 	}
 
@@ -109,9 +114,9 @@ public class Starship extends ExplodingGameObject {
 
 	}
 
-	public ArrayList<GameObject> getProjectiles() {
+/*	public ArrayList<GameObject> getProjectiles() {
 		return guns.getMyLasers();
-	}
+	}*/
 
 	@Override
 	protected boolean checkForCollision() {

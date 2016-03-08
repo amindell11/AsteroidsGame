@@ -141,22 +141,6 @@ public class Play extends BasicGameState {
 	// REMOVE INACTIVE GAME OBJECTS
 	private void purgeInactiveObjects() {
 		purgeAsteroids();
-		purgeShipProjectiles();
-		purgeEnemyProjectiles();
-	}
-
-	private void purgeEnemyProjectiles() {
-
-	}
-
-	private void purgeShipProjectiles() {
-		Iterator<GameObject> j = ship.getProjectiles().iterator();
-		while (j.hasNext()) {
-			Projectile currentProjectile = (Projectile) j.next();
-			if (!currentProjectile.isActive()) {
-				j.remove();
-			}
-		}
 	}
 
 	private void purgeAsteroids() {
@@ -194,7 +178,7 @@ public class Play extends BasicGameState {
 			return;
 		} // pause the game when player presses 'P'
 		if (in.isKeyPressed(Input.KEY_SPACE))
-			ship.shoot(); // fire ship guns when player presses Spacebar
+			ship.shoot(0); // fire ship guns when player presses Spacebar
 		if (in.isKeyDown(Input.KEY_W))
 			ship.ForwardKeyPressed();
 		if (in.isKeyDown(Input.KEY_A))
