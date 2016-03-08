@@ -48,8 +48,8 @@ public class Asteroid extends ExplodingGameObject{
 	}
 	
 		private static Vector2f getRandomPos(){
-		int posX=getRandomWithExclusion(rnd,0,SetupClass.ScreenWidth, (int)(Play.getShip()).getX());
-		int posY=getRandomWithExclusion(rnd,0,SetupClass.ScreenHeight, (int)(Play.getShip()).getY());
+		int posX=getRandomWithExclusion(rnd,0,0);
+		int posY=getRandomWithExclusion(rnd,0,0);
 		return new Vector2f(posX,posY);
 	}
 	
