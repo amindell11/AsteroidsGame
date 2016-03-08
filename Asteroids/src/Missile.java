@@ -19,7 +19,6 @@ public class Missile extends Projectile{
 	@Override
 	public void update(GameContainer gc, StateBasedGame sbg,int delta){
 		super.update(gc, sbg, delta);
-		System.out.println(acceleration);
 		speed=speed.add(new Vector2f(getRotation())
 		.scale(acceleration));
 	}
@@ -31,8 +30,8 @@ public class Missile extends Projectile{
 		}
 	}
 	@Override
-	public Projectile getInstance(){
-		return new Missile(pos,rotation,objectImage,launchVelocity,maxLifeTime,hitsLeft,acceleration);
+	public Projectile getInstance(Vector2f pos,double rotation){
+		return new Missile(pos,rotation,ObjectImage,launchVelocity,maxLifeTime,hitsLeft,acceleration);
 	}
 
 }

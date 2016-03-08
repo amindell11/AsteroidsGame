@@ -7,7 +7,7 @@ import org.newdawn.slick.state.StateBasedGame;
 
 public class Projectile extends GameObject implements UpdatingObject{
 	private double lived = 0;	
-	private double maxLifeTime;
+	protected double maxLifeTime;
 	float launchVelocity;
 	protected Projectile(Vector2f pos, double rotation, Image laserImage,float launchVelocity,double maxLifeTime){
 		super(pos,new Vector2f(rotation).scale(launchVelocity),40,20);
