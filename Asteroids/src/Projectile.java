@@ -9,15 +9,16 @@ public class Projectile extends GameObject implements UpdatingObject{
 	private double lived = 0;	
 	private double maxLifeTime;
 	float launchVelocity;
-	private Projectile(Vector2f pos, float rotation, Image laserImage,float launchVelocity,double maxLifeTime){
-		super(pos,new Vector2f,40,20);
-		
+	private Projectile(Vector2f pos, double rotation, Image laserImage,float launchVelocity,double maxLifeTime){
+		super(pos,new Vector2f(rotation).scale(launchVelocity),40,20);
+		this.maxLifeTime=maxLifeTime;
+		this.launchVelocity=launchVelocity;
 		ObjectImage=laserImage;
 		ObjectImage.setCenterOfRotation(width/2, height/2);
 		ObjectImage.setRotation((float)Math.toRadians(180+Math.toDegrees((float)this.speed.getTheta())));
 	}
 	public Projectile(Image laserImage, float launchVelocity, double maxLifeTime){
-		this(new Vector2f(0,0),new Vector2f(0,0),laserImage,launchVelocity,maxLifeTime);
+		this(new Vector2f(0,0),0,laserImage,launchVelocity,maxLifeTime);
 		active=false;
 	}
 	public void update(GameContainer gc, StateBasedGame sbg, int delta){
@@ -25,7 +26,9 @@ public class Projectile extends GameObject implements UpdatingObject{
 		if(isActive()){
 			super.update(gc, sbg, delta);
 			lived+=.001*delta;
-			if(lived>maxLifeTime)die();
+			if(lived>maxLifeTime){
+				die();
+			}
 		}
 	}
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g){
@@ -44,12 +47,15 @@ public class Projectile extends GameObject implements UpdatingObject{
 
 		}
 	}		
-	public Projectile getInstance(Vector2f pos, Vector2f speed){
-		return new Projectile(pos,speed,ObjectImage.copy());
+	public Projectile getInstance(Vector2f pos, double rotation){
+		return new Projectile(pos,rotation,ObjectImage.copy(),launchVelocity,maxLifeTime);
 	}
 	@Override
 	protected boolean checkForCollision() {
 		GameObject collidingWith = super.isCollidingWith(Play.getAsteroids());
 		return(collidingWith!=null);
+	}
+	public void die(){
+		super.die();
 	}
 }

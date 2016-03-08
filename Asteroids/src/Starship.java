@@ -44,7 +44,7 @@ public class Starship extends ExplodingGameObject {
 		turnSpeed=Float.parseFloat(template.getProperty("turnSpeed"));
 		int shotDelay = Integer.parseInt(template.getProperty("shotDelay"));
 		String ammo=template.getProperty("ammo");
-		guns = new Gun(new Image(ammo),shotDelay);
+		guns = new Gun(new Projectile(new Image(ammo),30f,0.5f),shotDelay);
 		ObjectImage = iconEnginesOff;
 		alive = true;
 		collisionModel = new Circle(pos.getX(), pos.getY(), height / 2);
@@ -88,12 +88,8 @@ public class Starship extends ExplodingGameObject {
 	}
 
 	public void shoot() {
-		try {
 			guns.shoot(pos.getX() + width / 2, pos.getY() + height / 2,
 					getRotation());
-		} catch (SlickException e) {
-			e.printStackTrace();
-		}
 	}
 
 	public void ForwardKeyPressed() {
