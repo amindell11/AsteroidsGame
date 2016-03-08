@@ -126,7 +126,7 @@ public class Starship extends ExplodingGameObject {
 	}
 	protected void die() {
 		super.die();
-		if(!Active)Play.GameOver();
+		if(!active)Play.GameOver();
 	}
 
 	public String toString() {

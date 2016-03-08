@@ -15,10 +15,10 @@ public abstract class GameObject {
 	protected int height;
 	protected Image ObjectImage;
 	protected Shape collisionModel;
-	protected boolean Active;
+	protected boolean active;
 
 	public GameObject() {
-		Active=true;
+		active=true;
 		height = 0;
 		width = 0;
 		pos = new Vector2f(SetupClass.ScreenWidth / 2 - width / 2,
@@ -31,7 +31,7 @@ public abstract class GameObject {
 		this.speed = speed;
 		this.height = height;
 		this.width = width;
-		Active = true;
+		active = true;
 		collisionModel = new Circle(pos.getX(), pos.getY(), height / 2);
 	}
 
@@ -132,7 +132,7 @@ public abstract class GameObject {
 	}
 
 	protected void die() {
-		Active = false;
+		active = false;
 	}
 
 	// GETTERS
@@ -141,7 +141,7 @@ public abstract class GameObject {
 	}
 
 	public boolean isActive() {
-		return Active;
+		return active;
 	}
 
 	public float getX() {

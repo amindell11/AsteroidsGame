@@ -6,27 +6,26 @@ import org.newdawn.slick.state.StateBasedGame;
 
 
 public class Projectile extends GameObject implements UpdatingObject{
-	private double lived = 0;
-	private double MAX_LIFETIME = .5;
-	private Gun source;
-	private int acceleration;
-	
-	
-	public Projectile(Vector2f pos, Vector2f speed, Image laserImage, Gun source, int acceleration){
-		super(pos,speed,40,20);
+	private double lived = 0;	
+	private double maxLifeTime;
+	float launchVelocity;
+	private Projectile(Vector2f pos, float rotation, Image laserImage,float launchVelocity,double maxLifeTime){
+		super(pos,new Vector2f,40,20);
+		
 		ObjectImage=laserImage;
 		ObjectImage.setCenterOfRotation(width/2, height/2);
 		ObjectImage.setRotation((float)Math.toRadians(180+Math.toDegrees((float)this.speed.getTheta())));
-		this.source=source;
-		this.acceleration=acceleration;
 	}
-	
+	public Projectile(Image laserImage, float launchVelocity, double maxLifeTime){
+		this(new Vector2f(0,0),new Vector2f(0,0),laserImage,launchVelocity,maxLifeTime);
+		active=false;
+	}
 	public void update(GameContainer gc, StateBasedGame sbg, int delta){
 		setRotation((float)speed.getTheta());
 		if(isActive()){
 			super.update(gc, sbg, delta);
 			lived+=.001*delta;
-			if(lived>MAX_LIFETIME)die();
+			if(lived>maxLifeTime)die();
 		}
 	}
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g){
@@ -45,8 +44,8 @@ public class Projectile extends GameObject implements UpdatingObject{
 
 		}
 	}		
-	public Gun getSource(){
-		return source;
+	public Projectile getInstance(Vector2f pos, Vector2f speed){
+		return new Projectile(pos,speed,ObjectImage.copy());
 	}
 	@Override
 	protected boolean checkForCollision() {
