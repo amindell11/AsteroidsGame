@@ -4,6 +4,7 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.geom.Circle;
+import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.StateBasedGame;
@@ -32,7 +33,7 @@ public abstract class GameObject {
 		this.height = height;
 		this.width = width;
 		active = true;
-		collisionModel = new Circle(pos.getX(), pos.getY(), height / 2);
+		collisionModel = new Circle(pos.getX(), pos.getY(), height/2);
 	}
 
 	/**
@@ -49,7 +50,11 @@ public abstract class GameObject {
 	}
 
 	public void renderDEBUG(GameContainer gc, StateBasedGame sbg, Graphics g) {
+		g.rotate(collisionModel.getCenterX(), collisionModel.getCenterY(), getRotation());
 		g.draw(collisionModel);
+		g.rotate(collisionModel.getCenterX(), collisionModel.getCenterY(), -getRotation());
+		g.draw(collisionModel);
+
 		g.drawLine(pos.getX() + width / 2, 0, pos.getX() + width / 2,
 				pos.getY() + height / 2);
 		g.drawLine(0, pos.getY() + width / 2, pos.getX() + width / 2,
@@ -57,6 +62,7 @@ public abstract class GameObject {
 		g.drawLine(pos.getX() + width / 2 + speed.getX() * 50, pos.getY()
 				+ height / 2 + speed.getY() * height / 2, pos.getX() + width
 				/ 2, pos.getY() + height / 2);
+
 	}
 
 	/**
