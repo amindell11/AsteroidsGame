@@ -10,6 +10,7 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Circle;
 import org.newdawn.slick.geom.Rectangle;
+import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.StateBasedGame;
 
@@ -50,7 +51,6 @@ public class Starship extends ExplodingGameObject {
 		guns.add(new Gun(new Projectile(new Image("res/Beam1.png"),30f,.5f),500));
 		ObjectImage = iconEnginesOff;
 		alive = true;
-		collisionModel = new Rectangle(pos.getX(), pos.getY(), width,height);
 	}
 
 	// RENDER
@@ -94,7 +94,9 @@ public class Starship extends ExplodingGameObject {
 		}
 		super.update(gc, sbg, delta);
 	}
-
+	public Shape getCollisionInstance(){
+		return new Rectangle(pos.getX(), pos.getY(), width,height);
+	}
 	public void shoot(int gunIndex) {
 			guns.get(gunIndex).shoot(pos.getX() + width / 2, pos.getY() + height / 2,
 					getRotation());

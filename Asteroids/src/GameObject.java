@@ -6,6 +6,7 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.geom.Circle;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Shape;
+import org.newdawn.slick.geom.Transform;
 import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.StateBasedGame;
 
@@ -25,6 +26,7 @@ public abstract class GameObject {
 		pos = new Vector2f(SetupClass.ScreenWidth / 2 - width / 2,
 				SetupClass.ScreenHeight / 2 - height / 2);
 		speed = new Vector2f(0, 0);
+		collisionModel=new Circle(pos.getX(), pos.getY(), height/2);
 	}
 
 	public GameObject(Vector2f pos, Vector2f speed, int width, int height) {
@@ -33,7 +35,7 @@ public abstract class GameObject {
 		this.height = height;
 		this.width = width;
 		active = true;
-		collisionModel = new Circle(pos.getX(), pos.getY(), height/2);
+		collisionModel=new Circle(pos.getX(), pos.getY(), height/2);
 	}
 
 	/**
@@ -50,9 +52,9 @@ public abstract class GameObject {
 	}
 
 	public void renderDEBUG(GameContainer gc, StateBasedGame sbg, Graphics g) {
-		g.rotate(collisionModel.getCenterX(), collisionModel.getCenterY(), getRotation());
-		g.draw(collisionModel);
-		g.rotate(collisionModel.getCenterX(), collisionModel.getCenterY(), -getRotation());
+		//g.rotate(collisionModel.getCenterX(), collisionModel.getCenterY(), getRotation());
+		//g.draw(collisionModel);
+		//g.rotate(collisionModel.getCenterX(), collisionModel.getCenterY(), -getRotation());
 		g.draw(collisionModel);
 
 		g.drawLine(pos.getX() + width / 2, 0, pos.getX() + width / 2,
@@ -64,7 +66,9 @@ public abstract class GameObject {
 				/ 2, pos.getY() + height / 2);
 
 	}
-
+	public Shape getCollisionInstance(){
+		return  new Circle(pos.getX(), pos.getY(), height/2);
+	}
 	/**
 	 * update calls move(),wrapOnScreen(), and checkForCollision()
 	 * 
@@ -73,6 +77,8 @@ public abstract class GameObject {
 	 * @param delta
 	 */
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) {
+			collisionModel=getCollisionInstance().transform(Transform.createRotateTransform((float) Math.toRadians(getRotation()), collisionModel.getCenterX(), collisionModel.getCenterY()));
+
 			if (checkForCollision()) {
 				die();
 			} else {
@@ -164,17 +170,17 @@ public abstract class GameObject {
 
 	// SETTERS
 	protected void setRotation(float theta) {
-		ObjectImage.setRotation(theta);
+		rotate(theta-getRotation());
 	}
 
 	protected void rotate(float theta) {
+		ObjectImage.setCenterOfRotation(width / 2, height / 2);
 		ObjectImage.rotate(theta);
 	}
 
 	protected void setObjectImage(Image image) {
 		float theta = ObjectImage.getRotation();
 		ObjectImage = image;
-		ObjectImage.setCenterOfRotation(width / 2, height / 2);
 		setRotation(theta);
 	}
 

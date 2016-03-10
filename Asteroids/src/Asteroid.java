@@ -11,7 +11,7 @@ public class Asteroid extends ExplodingGameObject{
 
 	static final float MaxVelocity = 2;
 	static final float MinVelocity = .2f;
-	static final float angularVel=1;//degrees per sec
+	static final float angularVel=.01f;
 	static final int maxDiam=225;
 	static final int minDiam=150;
 	private int hitsLeft;
@@ -70,7 +70,7 @@ public class Asteroid extends ExplodingGameObject{
 
 
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) {
-		rotate((float).001*angularVel/delta);
+		rotate((float)angularVel*delta);
 		super.update(gc, sbg, delta);
 	}
 
