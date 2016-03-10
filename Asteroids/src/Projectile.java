@@ -1,6 +1,8 @@
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
+import org.newdawn.slick.geom.Rectangle;
+import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.StateBasedGame;
 
@@ -14,8 +16,7 @@ public class Projectile extends GameObject implements UpdatingObject{
 		this.maxLifeTime=maxLifeTime;
 		this.launchVelocity=launchVelocity;
 		ObjectImage=laserImage;
-		ObjectImage.setCenterOfRotation(width/2, height/2);
-		ObjectImage.setRotation((float)Math.toRadians(180+Math.toDegrees((float)this.speed.getTheta())));
+		setRotation((float)Math.toRadians(180+Math.toDegrees((float)this.speed.getTheta())));
 	}
 	public Projectile(Image laserImage, float launchVelocity, double maxLifeTime){
 		this(new Vector2f(0,0),0,laserImage,launchVelocity,maxLifeTime);
@@ -34,21 +35,13 @@ public class Projectile extends GameObject implements UpdatingObject{
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g){
 		if(isActive()){
 			super.render(gc, sbg, g);
-			renderDEBUG(gc, sbg, g);
 		}
 	}
-	
-	public void renderDEBUG(GameContainer gc, StateBasedGame sbg, Graphics g){
-		if(SetupClass.isDEBUGGING){
-			g.drawRect(pos.getX(), pos.getY(), 40, 20);
-			g.drawLine(pos.getX()+20,0,pos.getX()+20,pos.getY()+10);
-			g.drawLine(0,pos.getY()+10,pos.getX()+20, pos.getY()+10);
-			g.drawLine(pos.getX()+20+speed.getX()*100,pos.getY()+10+speed.getY()*100,pos.getX()+20, pos.getY()+20);
-
-		}
-	}		
 	public Projectile getInstance(Vector2f pos, double rotation){
 		return new Projectile(pos,rotation,ObjectImage.copy(),launchVelocity,maxLifeTime);
+	}
+	public Shape getCollisionInstance(){
+		return new Rectangle(0,0, width,height);
 	}
 	@Override
 	protected boolean checkForCollision() {

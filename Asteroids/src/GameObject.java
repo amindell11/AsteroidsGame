@@ -56,7 +56,6 @@ public abstract class GameObject {
 		//g.draw(collisionModel);
 		//g.rotate(collisionModel.getCenterX(), collisionModel.getCenterY(), -getRotation());
 		g.draw(collisionModel);
-
 		g.drawLine(pos.getX() + width / 2, 0, pos.getX() + width / 2,
 				pos.getY() + height / 2);
 		g.drawLine(0, pos.getY() + width / 2, pos.getX() + width / 2,
@@ -67,7 +66,7 @@ public abstract class GameObject {
 
 	}
 	public Shape getCollisionInstance(){
-		return  new Circle(pos.getX(), pos.getY(), height/2);
+		return  new Circle(0,0, height/2);
 	}
 	/**
 	 * update calls move(),wrapOnScreen(), and checkForCollision()
@@ -77,7 +76,10 @@ public abstract class GameObject {
 	 * @param delta
 	 */
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) {
-			collisionModel=getCollisionInstance().transform(Transform.createRotateTransform((float) Math.toRadians(getRotation()), collisionModel.getCenterX(), collisionModel.getCenterY()));
+		System.out.println("Update "+this+" "+collisionModel.getCenterX());
+
+		Shape collisionTemp=getCollisionInstance().transform(Transform.createTranslateTransform(pos.x, pos.y));
+			collisionModel=collisionTemp.transform(Transform.createRotateTransform((float) Math.toRadians(getRotation()), pos.x+width/2,pos.y+height/2));
 
 			if (checkForCollision()) {
 				die();
@@ -102,8 +104,6 @@ public abstract class GameObject {
 	// CHANGE POS BY SPEED
 	private void move() {
 		pos.add(speed);
-		collisionModel.setCenterX(pos.getX()+width/2);
-		collisionModel.setCenterY(pos.getY()+height/2);
 	}
 
 	/**
