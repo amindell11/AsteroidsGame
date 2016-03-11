@@ -1,4 +1,4 @@
 
 public interface EventHandler {
-	public void run(String message);
+	public void run(String message,EchoThread thread);
 }

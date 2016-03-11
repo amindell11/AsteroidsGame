@@ -18,7 +18,7 @@ public class ExampleGame extends BasicGame
     Box box;
     public ExampleGame()
     {
-        super("Wizard game");
+        super("Server");
     }
  
     public static void main(String[] arguments)
@@ -55,11 +55,10 @@ public class ExampleGame extends BasicGame
         new EchoThread(socket,new EventHandler(){
 
 			@Override
-			public void run(String message) {
-				System.out.println(message+" recieved");
+			public void run(String message,EchoThread thread) {
 				if(message.equals("0")){
-					System.out.println("moving");
 					box.move(1,0);
+					thread.out.println(box.x);
 				}
 			}
         	
