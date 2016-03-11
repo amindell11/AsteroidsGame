@@ -4,6 +4,10 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.BasicGame;
@@ -11,6 +15,11 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonParser;
+import com.google.gson.reflect.TypeToken;
 
 public class GameClient extends BasicGame {
 	static final int PORT = 8000;
@@ -21,6 +30,7 @@ public class GameClient extends BasicGame {
 	PrintWriter out;
 	Input input;
     BufferedReader in;
+	ArrayList<Box> clients;
 	public GameClient() {
 		super("Client");
 	}
@@ -38,6 +48,7 @@ public class GameClient extends BasicGame {
 
 	@Override
 	public void init(GameContainer container) throws SlickException {
+    	clients=new ArrayList<>();
 		try {
 			box=new Box(50,50);
 			input=new Input(400);
@@ -56,7 +67,7 @@ public class GameClient extends BasicGame {
 			String update="0";
 			try {
 				if((update=in.readLine())!=null){
-					box.x=Integer.parseInt(update);
+					clients= new Gson().fromJson(update, new TypeToken<List<Box>>(){}.getType());
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -66,6 +77,8 @@ public class GameClient extends BasicGame {
 	}
 
 	public void render(GameContainer container, Graphics g) throws SlickException {
-		box.render(container, g);
+    	for(Box b:clients){
+    		b.render(container, g);
+    	}
 	}
 }

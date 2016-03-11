@@ -4,18 +4,21 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.HashMap;
 
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
+
+import com.google.gson.Gson;
 public class ExampleGame extends BasicGame
 {
+	HashMap<String,Box> clients;
     static final int PORT = 8000;
 	ServerSocket serverSocket = null;
     Socket socket = null;
-    Box box;
     public ExampleGame()
     {
         super("Server");
@@ -40,7 +43,7 @@ public class ExampleGame extends BasicGame
     @Override
     public void init(GameContainer container) throws SlickException
     {
-    	box=new Box(50,50);
+    	clients=new HashMap<>();
     	try {
             serverSocket = new ServerSocket(PORT);
         } catch (IOException e) {
@@ -49,6 +52,8 @@ public class ExampleGame extends BasicGame
         }
     	try {
             socket = serverSocket.accept();
+            System.out.println(socket.getInetAddress());
+        	clients.put(socket.getInetAddress().toString(),new Box(50,50));
         } catch (IOException e) {
             System.out.println("I/O error: " + e);
         }
@@ -57,8 +62,8 @@ public class ExampleGame extends BasicGame
 			@Override
 			public void run(String message,EchoThread thread) {
 				if(message.equals("0")){
-					box.move(1,0);
-					thread.out.println(box.x);
+					clients.get(thread.socket.getInetAddress().toString()).move(1,0);
+					thread.out.println(new Gson().toJson(clients.values()));
 				}
 			}
         	
@@ -71,6 +76,8 @@ public class ExampleGame extends BasicGame
     }
     public void render(GameContainer container, Graphics g) throws SlickException
     {
-    	box.render(container, g);
+    	for(Box b:clients.values()){
+    		b.render(container, g);
+    	}
     }
 }
