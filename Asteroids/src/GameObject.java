@@ -4,6 +4,7 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.geom.Circle;
+import org.newdawn.slick.geom.Point;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Transform;
@@ -20,13 +21,8 @@ public abstract class GameObject {
 	protected boolean active;
 
 	public GameObject() {
-		active=true;
-		height = 0;
-		width = 0;
-		pos = new Vector2f(SetupClass.ScreenWidth / 2 - width / 2,
-				SetupClass.ScreenHeight / 2 - height / 2);
-		speed = new Vector2f(0, 0);
-		collisionModel=new Circle(pos.getX(), pos.getY(), height/2);
+		this(new Vector2f(SetupClass.ScreenWidth / 2,
+				SetupClass.ScreenHeight / 2),new Vector2f(0, 0),0,0);
 	}
 
 	public GameObject(Vector2f pos, Vector2f speed, int width, int height) {
@@ -35,7 +31,7 @@ public abstract class GameObject {
 		this.height = height;
 		this.width = width;
 		active = true;
-		collisionModel=new Circle(pos.getX(), pos.getY(), height/2);
+		collisionModel=getCollisionInstance();
 	}
 
 	/**
@@ -46,7 +42,7 @@ public abstract class GameObject {
 	 * @param g
 	 */
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) {
-		ObjectImage.draw(pos.getX(), pos.getY(), width, height);
+		ObjectImage.draw(pos.getX()-width/2, pos.getY()-height/2, width, height);
 		if (SetupClass.isDEBUGGING)
 			renderDEBUG(gc, sbg, g);
 	}
@@ -56,17 +52,14 @@ public abstract class GameObject {
 		//g.draw(collisionModel);
 		//g.rotate(collisionModel.getCenterX(), collisionModel.getCenterY(), -getRotation());
 		g.draw(collisionModel);
-		g.drawLine(pos.getX() + width / 2, 0, pos.getX() + width / 2,
-				pos.getY() + height / 2);
-		g.drawLine(0, pos.getY() + width / 2, pos.getX() + width / 2,
-				pos.getY() + height / 2);
-		g.drawLine(pos.getX() + width / 2 + speed.getX() * 50, pos.getY()
-				+ height / 2 + speed.getY() * height / 2, pos.getX() + width
-				/ 2, pos.getY() + height / 2);
+		//g.draw(new Circle(pos.x-5,pos.y-5,10));
+		g.drawLine(pos.x, 0, pos.x,pos.y);
+		g.drawLine(0, pos.y, pos.x,pos.y);
+		g.drawLine(pos.x + width / 2 + speed.x * 50, pos.y + speed.y * height / 2, pos.x, pos.y);
 
 	}
 	public Shape getCollisionInstance(){
-		return  new Circle(0,0, height/2);
+		return new Circle(-height/4, -height/4, height/2);
 	}
 	/**
 	 * update calls move(),wrapOnScreen(), and checkForCollision()
@@ -76,11 +69,9 @@ public abstract class GameObject {
 	 * @param delta
 	 */
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) {
-		System.out.println("Update "+this+" "+collisionModel.getCenterX());
-
-		Shape collisionTemp=getCollisionInstance().transform(Transform.createTranslateTransform(pos.x, pos.y));
-			collisionModel=collisionTemp.transform(Transform.createRotateTransform((float) Math.toRadians(getRotation()), pos.x+width/2,pos.y+height/2));
-
+		Shape collisionTemp=getCollisionInstance().transform(Transform.createTranslateTransform(pos.getX()-width/2, pos.getY()-height/2));
+			collisionModel=collisionTemp.transform(Transform.createRotateTransform((float) Math.toRadians(getRotation()), pos.x,pos.y));
+			System.out.println(this+" "+collisionModel.getCenterX()+" "+pos.getX()+width/2);
 			if (checkForCollision()) {
 				die();
 			} else {

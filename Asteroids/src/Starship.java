@@ -77,6 +77,8 @@ public class Starship extends ExplodingGameObject {
 		for(Gun gun:guns){
 			gun.update(gc, sbg, delta);
 		}
+		super.update(gc, sbg, delta);
+
 		if (alive) {
 			if (turningLeft)
 				rotate((float) -turnSpeed * delta);
@@ -92,10 +94,9 @@ public class Starship extends ExplodingGameObject {
 			accelerating = false;
 			turningRight = false;
 		}
-		super.update(gc, sbg, delta);
 	}
 	public Shape getCollisionInstance(){
-		return new Rectangle(500, 0,width,height);
+		return new Rectangle(0, 0,width,height);
 	}
 	public void shoot(int gunIndex) {
 			guns.get(gunIndex).shoot(pos.getX() + width / 2, pos.getY() + height / 2,
@@ -124,7 +125,6 @@ public class Starship extends ExplodingGameObject {
 			super.checkForCollision();
 			GameObject collidingWith = isCollidingWith(Play.getAsteroids());
 			if(collidingWith!=null){
-				System.out.println(collidingWith.getX()+" "+collidingWith.getY()+" "+pos.x+" "+pos.y);
 				return true;
 			}
 			return false;

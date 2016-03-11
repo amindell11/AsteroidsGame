@@ -120,8 +120,9 @@ public class Play extends BasicGameState {
 		if (!isPaused) {
 			purgeInactiveObjects();
 			addPendingAsteroids();
-			if (isLevelClear())
-				makeNewLevel();
+			if (isLevelClear()){
+				//makeNewLevel();
+			}
 			updateShip(gc, sbg, delta);
 			updateAsteroids(gc, sbg, delta);
 		}
