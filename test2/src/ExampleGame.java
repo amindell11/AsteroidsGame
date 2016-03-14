@@ -10,6 +10,7 @@ import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 
 import com.google.gson.Gson;
@@ -61,10 +62,12 @@ public class ExampleGame extends BasicGame
 
 			@Override
 			public void run(String message,EchoThread thread) {
-				if(message.equals("0")){
+				if(Integer.parseInt(message)==Input.KEY_W){
 					clients.get(thread.socket.getInetAddress().toString()).move(1,0);
-					thread.out.println(new Gson().toJson(clients.values()));
+				}else if(Integer.parseInt(message)==Input.KEY_S){
+					clients.get(thread.socket.getInetAddress().toString()).move(-1,0);
 				}
+				thread.out.println(new Gson().toJson(clients.values()));
 			}
         	
         }).start();
