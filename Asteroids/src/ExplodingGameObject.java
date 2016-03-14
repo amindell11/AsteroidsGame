@@ -27,7 +27,6 @@ public class ExplodingGameObject extends GameObject{
 		try {
 			explosion = new SpriteSheet("res/Explosion.png", 27,27);
 		} catch (SlickException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		explode = new Animation(explosion, 100);
@@ -37,7 +36,7 @@ public class ExplodingGameObject extends GameObject{
 	@Override
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) {
 		if(alive)super.render(gc, sbg, g);
-		else explode.draw(pos.getX(),pos.getY(), width,height);
+		else explode.draw(pos.getX()-width/2,pos.getY()-width/2, width,height);
 	}
 	@Override
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) {

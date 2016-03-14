@@ -121,7 +121,7 @@ public class Play extends BasicGameState {
 			purgeInactiveObjects();
 			addPendingAsteroids();
 			if (isLevelClear()){
-				//makeNewLevel();
+				makeNewLevel();
 			}
 			updateShip(gc, sbg, delta);
 			updateAsteroids(gc, sbg, delta);

@@ -43,6 +43,7 @@ public class GameClient extends BasicGame {
 			AppGameContainer app = new AppGameContainer(new GameClient());
 			app.setDisplayMode(500, 400, false);
 			app.setShowFPS(true);
+			app.setTargetFrameRate(60);
 			app.start();
 		} catch (SlickException e) {
 			e.printStackTrace();
@@ -69,14 +70,14 @@ public class GameClient extends BasicGame {
 	@Override
 	public void update(GameContainer container, int delta) throws SlickException {
 		if (input.isKeyDown(Input.KEY_W)) {
-				out.println(Input.KEY_W);
-			recieveStatusUpdate();
+			out.println(Input.KEY_W);
 		}
 		if (input.isKeyDown(Input.KEY_S)) {
 			out.println(Input.KEY_S);
-			recieveStatusUpdate();
-
+		}else{
+			out.println(-1);
 		}
+		recieveStatusUpdate();	
 	}
 
 	public void recieveStatusUpdate() {

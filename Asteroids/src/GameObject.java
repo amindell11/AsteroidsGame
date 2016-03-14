@@ -55,11 +55,11 @@ public abstract class GameObject {
 		//g.draw(new Circle(pos.x-5,pos.y-5,10));
 		g.drawLine(pos.x, 0, pos.x,pos.y);
 		g.drawLine(0, pos.y, pos.x,pos.y);
-		g.drawLine(pos.x + width / 2 + speed.x * 50, pos.y + speed.y * height / 2, pos.x, pos.y);
+		g.drawLine(pos.x + speed.x * 50, pos.y + speed.y * 50, pos.x, pos.y);
 
 	}
 	public Shape getCollisionInstance(){
-		return new Circle(-height/4, -height/4, height/2);
+		return new Circle(height/2, height/2, height/2);
 	}
 	/**
 	 * update calls move(),wrapOnScreen(), and checkForCollision()
@@ -69,14 +69,13 @@ public abstract class GameObject {
 	 * @param delta
 	 */
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) {
-		Shape collisionTemp=getCollisionInstance().transform(Transform.createTranslateTransform(pos.getX()-width/2, pos.getY()-height/2));
-			collisionModel=collisionTemp.transform(Transform.createRotateTransform((float) Math.toRadians(getRotation()), pos.x,pos.y));
-			System.out.println(this+" "+collisionModel.getCenterX()+" "+pos.getX()+width/2);
 			if (checkForCollision()) {
 				die();
 			} else {
 				move();
 				wrapOnScreen();
+				Shape collisionTemp=getCollisionInstance().transform(Transform.createTranslateTransform(pos.getX()-width/2, pos.getY()-height/2));
+				collisionModel=collisionTemp.transform(Transform.createRotateTransform((float) Math.toRadians(getRotation()), pos.x,pos.y));
 			}
 	}
 

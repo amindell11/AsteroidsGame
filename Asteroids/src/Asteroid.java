@@ -11,7 +11,7 @@ public class Asteroid extends ExplodingGameObject{
 
 	static final float MaxVelocity = 2;
 	static final float MinVelocity = .2f;
-	static final float angularVel=.01f;
+	static final float angularVel=.00f;
 	static final int maxDiam=225;
 	static final int minDiam=150;
 	private int hitsLeft;

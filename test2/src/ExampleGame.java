@@ -32,6 +32,7 @@ public class ExampleGame extends BasicGame
             AppGameContainer app = new AppGameContainer(new ExampleGame());
             app.setDisplayMode(500, 400, false);
             app.setShowFPS(true);
+            app.setTargetFrameRate(60);
             app.setAlwaysRender(true); 
             app.start();
         }
@@ -51,9 +52,13 @@ public class ExampleGame extends BasicGame
             e.printStackTrace();
 
         }
+    }
+    @Override
+    public void update(GameContainer container, int delta) throws SlickException
+    {
     	try {
             socket = serverSocket.accept();
-            System.out.println(socket.getInetAddress());
+            System.out.println("Welcome, "+socket.getInetAddress());
         	clients.put(socket.getInetAddress().toString(),new Box(50,50));
         } catch (IOException e) {
             System.out.println("I/O error: " + e);
@@ -71,11 +76,6 @@ public class ExampleGame extends BasicGame
 			}
         	
         }).start();
-    }
-    @Override
-    public void update(GameContainer container, int delta) throws SlickException
-    {
-
     }
     public void render(GameContainer container, Graphics g) throws SlickException
     {

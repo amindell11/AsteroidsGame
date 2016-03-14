@@ -21,6 +21,7 @@ public class SetupClass extends StateBasedGame{
 		ScreenWidth = gd.getDisplayMode().getWidth();
 		ScreenHeight = gd.getDisplayMode().getHeight();
 		AppGameContainer app = new AppGameContainer(new SetupClass("setup test2"));
+		app.setAlwaysRender(true);
 		app.setDisplayMode(ScreenWidth, ScreenHeight, false);
 		app.setShowFPS(true);
 		app.setTargetFrameRate(60);

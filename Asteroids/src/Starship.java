@@ -9,10 +9,13 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Circle;
+import org.newdawn.slick.geom.Polygon;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.StateBasedGame;
+
+import com.google.gson.Gson;
 
 public class Starship extends ExplodingGameObject {
 
@@ -24,7 +27,7 @@ public class Starship extends ExplodingGameObject {
 	private Image iconEnginesOff;
 	private Image iconEnginesOn;
 	private ArrayList<Gun> guns;
-
+	private float[] collisionPoints;
 	// Default position at the center of the screen
 	public Starship(String config) throws SlickException {
 		super();
@@ -50,6 +53,7 @@ public class Starship extends ExplodingGameObject {
 		guns.add(new Gun(new Missile(new Image("res/missile 1.png"),1.2f,1f,3,.5f),4000));
 		guns.add(new Gun(new Projectile(new Image("res/Beam1.png"),30f,.5f),500));
 		ObjectImage = iconEnginesOff;
+		collisionPoints=new Gson().fromJson(template.getProperty("collision"),float[].class);
 		alive = true;
 	}
 
@@ -77,7 +81,6 @@ public class Starship extends ExplodingGameObject {
 		for(Gun gun:guns){
 			gun.update(gc, sbg, delta);
 		}
-		super.update(gc, sbg, delta);
 
 		if (alive) {
 			if (turningLeft)
@@ -94,12 +97,16 @@ public class Starship extends ExplodingGameObject {
 			accelerating = false;
 			turningRight = false;
 		}
+		super.update(gc, sbg, delta);
+
 	}
 	public Shape getCollisionInstance(){
-		return new Rectangle(0, 0,width,height);
+		//float[] points={30f,5f,30f,height-5f,width/2f,(float)height,(float)width,height/2f,width/2f,0f};
+		//System.out.println(new Gson().toJson(points));
+		return collisionPoints!=null?new Polygon(collisionPoints):super.getCollisionInstance();
 	}
 	public void shoot(int gunIndex) {
-			guns.get(gunIndex).shoot(pos.getX() + width / 2, pos.getY() + height / 2,
+			guns.get(gunIndex).shoot(pos.getX(), pos.getY(),
 					getRotation());
 	}
 
