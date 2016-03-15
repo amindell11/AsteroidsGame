@@ -59,23 +59,21 @@ public class ExampleGame extends BasicGame
     	try {
             socket = serverSocket.accept();
             System.out.println("Welcome, "+socket.getInetAddress());
-        	clients.put(socket.getInetAddress().toString(),new Box(50,50));
         } catch (IOException e) {
             System.out.println("I/O error: " + e);
         }
-        new EchoThread(socket,new EventHandler(){
+        Thread t=new EchoThread(socket,new EventHandler(){
 
 			@Override
 			public void run(String message,EchoThread thread) {
-				if(Integer.parseInt(message)==Input.KEY_W){
-					clients.get(thread.socket.getInetAddress().toString()).move(1,0);
-				}else if(Integer.parseInt(message)==Input.KEY_S){
-					clients.get(thread.socket.getInetAddress().toString()).move(-1,0);
-				}
+				clients.put(thread.toString(),new Gson().fromJson(message, Box.class));
+				System.out.println(clients);
 				thread.out.println(new Gson().toJson(clients.values()));
 			}
-        	
-        }).start();
+        });
+        t.start();
+    	clients.put(t.toString(),new Box(50,50));
+
     }
     public void render(GameContainer container, Graphics g) throws SlickException
     {

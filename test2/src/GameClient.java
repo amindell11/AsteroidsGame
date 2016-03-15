@@ -43,6 +43,7 @@ public class GameClient extends BasicGame {
 			AppGameContainer app = new AppGameContainer(new GameClient());
 			app.setDisplayMode(500, 400, false);
 			app.setShowFPS(true);
+			app.setAlwaysRender(true);
 			app.setTargetFrameRate(60);
 			app.start();
 		} catch (SlickException e) {
@@ -70,17 +71,12 @@ public class GameClient extends BasicGame {
 	@Override
 	public void update(GameContainer container, int delta) throws SlickException {
 		if (input.isKeyDown(Input.KEY_W)) {
-			out.println(Input.KEY_W);
+			box.move(1,0);
 		}
 		if (input.isKeyDown(Input.KEY_S)) {
-			out.println(Input.KEY_S);
-		}else{
-			out.println(-1);
+			box.move(-1,0);
 		}
-		recieveStatusUpdate();	
-	}
-
-	public void recieveStatusUpdate() {
+		out.println(new Gson().toJson(box));
 		String update = null;
 		try {
 			if ((update = in.readLine()) != null) {
@@ -90,6 +86,9 @@ public class GameClient extends BasicGame {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	public void recieveStatusUpdate() {
+
 	}
 
 	public void render(GameContainer container, Graphics g) throws SlickException {

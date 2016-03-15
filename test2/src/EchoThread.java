@@ -44,4 +44,7 @@ public class EchoThread extends Thread {
             }
         }
     }
+    public String getClientAddress(){
+    	return socket.getInetAddress().toString();
+    }
 }
