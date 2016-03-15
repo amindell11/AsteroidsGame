@@ -73,6 +73,7 @@ public class GameClient extends BasicGame {
 		if (input.isKeyDown(Input.KEY_S)) {
 			clientControlledObject.move(-(int)(delta*.12f),0);
 		}
+		sendUpdate(clientControlledObject);
 		recieveUpdate(gc);
 	}
 	public void sendUpdate(Object obj){
