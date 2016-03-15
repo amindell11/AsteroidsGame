@@ -23,7 +23,7 @@ public class GameClient extends BasicGame {
 	static final int PORT = 8000;
 	static final boolean sameComputer = true;
 	String hostName = "10.208.8.24";
-	Box box;
+	Box clientControlledObject;
 	int portNumber = 8000;
 	Socket socket;
 	PrintWriter out;
@@ -52,7 +52,7 @@ public class GameClient extends BasicGame {
 	public void init(GameContainer container) throws SlickException {
 		clients = new ArrayList<>();
 		try {
-			box = new Box(50, 50);
+			clientControlledObject = new Box(50, 50);
 			input = new Input(400);
 			if (sameComputer)
 				hostName = InetAddress.getLocalHost().getHostAddress();
@@ -68,17 +68,22 @@ public class GameClient extends BasicGame {
 	@Override
 	public void update(GameContainer gc, int delta) throws SlickException {
 		if (input.isKeyDown(Input.KEY_W)) {
-			box.move((int)(delta*.12f),0);
+			clientControlledObject.move((int)(delta*.12f),0);
 		}
 		if (input.isKeyDown(Input.KEY_S)) {
-			box.move(-(int)(delta*.12f),0);
+			clientControlledObject.move(-(int)(delta*.12f),0);
 		}
-		out.println(new Gson().toJson(box));
+		recieveUpdate(gc);
+	}
+	public void sendUpdate(Object obj){
+		out.println(new Gson().toJson(clientControlledObject));
+	}
+	public void recieveUpdate(GameContainer gc){
 		long time=System.nanoTime();
 		String update = null;
 		try {
 			if ((update = in.readLine()) != null) {
-				if(update.equals("CLOSE")){
+				if(update.equals("QUIT")){
 					gc.exit();
 				}else{
 				clients = new Gson().fromJson(update, new TypeToken<List<Box>>() {
@@ -90,12 +95,18 @@ public class GameClient extends BasicGame {
 		}
 		ping=System.nanoTime()-time;
 		ping/=1000000;
-		
+	}
+	public void render(GameContainer container, Graphics g) throws SlickException {
+		for (Box b : clients) {
+			b.render(container, g);
+		}
+		String string = ping+"ms";
+		g.setFont(new TrueTypeFont(new Font("Verdana", Font.BOLD, 12),true));
+		g.drawString(string, container.getWidth()-new TrueTypeFont(new Font("Verdana", Font.BOLD, 12),true).getWidth(string), 0);
 	}
     @Override
     public boolean closeRequested()
     {
-    	out.println("CLOSE");
     	out.println("QUIT");
     	try {
 			socket.close();
@@ -105,12 +116,6 @@ public class GameClient extends BasicGame {
       System.exit(0); // Use this if you want to quit the app.
       return false;
     }
-	public void render(GameContainer container, Graphics g) throws SlickException {
-		g.setFont(new TrueTypeFont(new Font("Verdana", Font.BOLD, 12),true));
-		for (Box b : clients) {
-			b.render(container, g);
-		}
-		String string = ping+"ms";
-		g.drawString(string, container.getWidth()-new TrueTypeFont(new Font("Verdana", Font.BOLD, 12),true).getWidth(string), 0);
-	}
+    
+
 }
