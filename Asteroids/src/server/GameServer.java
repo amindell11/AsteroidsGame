@@ -1,3 +1,4 @@
+package server;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.InetAddress;
@@ -12,7 +13,7 @@ public class GameServer {
 	static Gson jsonParser;
 	HashMap<String, Box> clients;
 	int port;
-	static final boolean REQUIRE_UNIQUE_CLIENTS = true;
+	static final boolean REQUIRE_UNIQUE_CLIENTS = false;
 	ServerSocket serverSocket = null;
 
 	public GameServer(int port) {
