@@ -1,14 +1,12 @@
+import java.awt.Font;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.InetAddress;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.BasicGame;
@@ -16,10 +14,9 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.TrueTypeFont;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
 public class GameClient extends BasicGame {
@@ -33,7 +30,7 @@ public class GameClient extends BasicGame {
 	Input input;
 	BufferedReader in;
 	ArrayList<Box> clients;
-
+	long ping;
 	public GameClient() {
 		super("Client");
 	}
@@ -42,8 +39,8 @@ public class GameClient extends BasicGame {
 		try {
 			AppGameContainer app = new AppGameContainer(new GameClient());
 			app.setDisplayMode(500, 400, false);
-			app.setShowFPS(true);
 			app.setAlwaysRender(true);
+			app.setShowFPS(false);
 			app.setTargetFrameRate(60);
 			app.start();
 		} catch (SlickException e) {
@@ -71,12 +68,13 @@ public class GameClient extends BasicGame {
 	@Override
 	public void update(GameContainer gc, int delta) throws SlickException {
 		if (input.isKeyDown(Input.KEY_W)) {
-			box.move(1,0);
+			box.move((int)(delta*.12f),0);
 		}
 		if (input.isKeyDown(Input.KEY_S)) {
-			box.move(-1,0);
+			box.move(-(int)(delta*.12f),0);
 		}
 		out.println(new Gson().toJson(box));
+		long time=System.nanoTime();
 		String update = null;
 		try {
 			if ((update = in.readLine()) != null) {
@@ -90,9 +88,9 @@ public class GameClient extends BasicGame {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
-	public void recieveStatusUpdate() {
-
+		ping=System.nanoTime()-time;
+		ping/=1000000;
+		
 	}
     @Override
     public boolean closeRequested()
@@ -108,8 +106,11 @@ public class GameClient extends BasicGame {
       return false;
     }
 	public void render(GameContainer container, Graphics g) throws SlickException {
+		g.setFont(new TrueTypeFont(new Font("Verdana", Font.BOLD, 12),true));
 		for (Box b : clients) {
 			b.render(container, g);
 		}
+		String string = ping+"ms";
+		g.drawString(string, container.getWidth()-new TrueTypeFont(new Font("Verdana", Font.BOLD, 12),true).getWidth(string), 0);
 	}
 }

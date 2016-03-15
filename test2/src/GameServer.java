@@ -9,43 +9,47 @@ import java.util.HashMap;
 import com.google.gson.Gson;
 public class GameServer
 {
+	static Gson jsonParser;
 	HashMap<String,Box> clients;
-    static final int PORT = 8000;
-    static final boolean UNIQUE_CLIENTS=false;
+    int port;
+    static final boolean REQUIRE_UNIQUE_CLIENTS=false;
 	ServerSocket serverSocket = null;
-    Socket socket = null;
-    public static void main(String[] arguments)
-    {
-    	GameServer server=new GameServer();
-    	server.init();
-    	while(true){
-    		server.update(0);
-    	}
+    public GameServer(int port){
+    	this.port=port;
+    	init();
     }
     public void init()
     {
     	clients=new HashMap<>();
     	try {
-            serverSocket = new ServerSocket(PORT);
+            serverSocket = new ServerSocket(port);
         } catch (IOException e) {
             e.printStackTrace();
         }
     	try {
-			System.out.println("Server is now running at address "+InetAddress.getLocalHost().getHostAddress()+" port "+PORT);
+			System.out.println("Server is now running at address "+InetAddress.getLocalHost().getHostAddress()+" port "+port);
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
     }
-    @SuppressWarnings("unused")
+    
 	public void update(int delta)
     {
+		Socket socket=null;
     	try {
             socket = serverSocket.accept();
         } catch (IOException e) {
             System.out.println("I/O error: " + e);
         }
-		InetAddress address = socket.getInetAddress();
-    	if(clients.containsKey(address.toString())&&UNIQUE_CLIENTS) {
+    	addClient(socket);
+		
+
+    }
+    @SuppressWarnings("unused")
+
+    public void addClient(Socket socket){
+    	InetAddress address = socket.getInetAddress();
+    	if(clients.containsKey(address.toString())&&REQUIRE_UNIQUE_CLIENTS) {
             try {
 				new PrintWriter(socket.getOutputStream(), true).println("CLOSE");
 			} catch (IOException e) {
@@ -57,20 +61,31 @@ public class GameServer
 
 				@Override
 				public void run(String message,EchoThread thread) {
-					if(message.equalsIgnoreCase("CLOSE")){
-						System.out.println(thread.getIdentifier(UNIQUE_CLIENTS));
-						clients.remove(thread.getIdentifier(UNIQUE_CLIENTS));
-						System.out.println(clients);
-					}else{
-					clients.put(thread.getIdentifier(UNIQUE_CLIENTS),new Gson().fromJson(message, Box.class));
-					thread.out.println(new Gson().toJson(clients.values()));
-					}
+					onMessageRecieved(message,thread);
 				}
 	        });
 	        t.start();
-	        System.out.println(t.getIdentifier(UNIQUE_CLIENTS));
-	    	clients.put(t.getIdentifier(UNIQUE_CLIENTS),new Box(50,50));
+	        System.out.println(t.getIdentifier(REQUIRE_UNIQUE_CLIENTS));
+	    	clients.put(t.getIdentifier(REQUIRE_UNIQUE_CLIENTS),new Box(50,50));
 			System.out.println("Welcome, "+address.getHostName());
 		}
+    }
+	public void onMessageRecieved(String message,EchoThread thread){
+		String key=thread.getIdentifier(REQUIRE_UNIQUE_CLIENTS);
+		if(message.equalsIgnoreCase("CLOSE")){
+			//System.out.println("recieved update from "+key);
+			clients.remove(key);
+		}else{
+		clients.put(key,new Gson().fromJson(message, Box.class));
+		thread.out.println(new Gson().toJson(clients.values()));
+		}
+	}
+	
+    public static void main(String[] arguments)
+    {
+    	GameServer server=new GameServer(8000);
+    	while(true){
+    		server.update(0);
+    	}
     }
 }
