@@ -28,7 +28,7 @@ public class GameClient extends BasicGame {
 	String hostName = "10.208.8.24";
 	Box box;
 	int portNumber = 8000;
-	Socket echoSocket;
+	Socket socket;
 	PrintWriter out;
 	Input input;
 	BufferedReader in;
@@ -60,16 +60,16 @@ public class GameClient extends BasicGame {
 			if (sameComputer)
 				hostName = InetAddress.getLocalHost().getHostAddress();
 			System.out.println(hostName);
-			echoSocket = new Socket(hostName, portNumber);
-			in = new BufferedReader(new InputStreamReader(echoSocket.getInputStream()));
-			out = new PrintWriter(echoSocket.getOutputStream(), true);
+			socket = new Socket(hostName, portNumber);
+			in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			out = new PrintWriter(socket.getOutputStream(), true);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
 	@Override
-	public void update(GameContainer container, int delta) throws SlickException {
+	public void update(GameContainer gc, int delta) throws SlickException {
 		if (input.isKeyDown(Input.KEY_W)) {
 			box.move(1,0);
 		}
@@ -80,8 +80,12 @@ public class GameClient extends BasicGame {
 		String update = null;
 		try {
 			if ((update = in.readLine()) != null) {
+				if(update.equals("CLOSE")){
+					gc.exit();
+				}else{
 				clients = new Gson().fromJson(update, new TypeToken<List<Box>>() {
 				}.getType());
+				}
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -90,7 +94,19 @@ public class GameClient extends BasicGame {
 	public void recieveStatusUpdate() {
 
 	}
-
+    @Override
+    public boolean closeRequested()
+    {
+    	out.println("CLOSE");
+    	out.println("QUIT");
+    	try {
+			socket.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+      System.exit(0); // Use this if you want to quit the app.
+      return false;
+    }
 	public void render(GameContainer container, Graphics g) throws SlickException {
 		for (Box b : clients) {
 			b.render(container, g);

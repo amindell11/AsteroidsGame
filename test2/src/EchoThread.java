@@ -31,13 +31,18 @@ public class EchoThread extends Thread {
         String line;
         while (true) {
             try {
+            	if(brinp.ready()){
                 line = brinp.readLine();
                 if ((line == null) || line.equalsIgnoreCase("QUIT")) {
+        			inp.close();
+        			brinp.close();
+        			out.close();
                     socket.close();
                     return;
                 } else {
                 	onMessageRecieved.run(line,this);
                 }
+            	}
             } catch (IOException e) {
                 e.printStackTrace();
                 return;
@@ -45,6 +50,11 @@ public class EchoThread extends Thread {
         }
     }
     public String getClientAddress(){
-    	return socket.getInetAddress().toString();
+    	return socket.getInetAddress().getHostAddress();
     }
+    public String getIdentifier(boolean uniqueAddressClients){
+    	if(uniqueAddressClients)return getClientAddress();
+    	else return toString();
+    }
+
 }
