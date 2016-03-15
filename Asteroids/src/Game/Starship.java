@@ -1,3 +1,5 @@
+package Game;
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -8,9 +10,7 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
-import org.newdawn.slick.geom.Circle;
 import org.newdawn.slick.geom.Polygon;
-import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.StateBasedGame;
@@ -29,7 +29,10 @@ public class Starship extends ExplodingGameObject {
 	private ArrayList<Gun> guns;
 	private float[] collisionPoints;
 	// Default position at the center of the screen
-	public Starship(String config) throws SlickException {
+	public Starship() throws SlickException{
+		this("StarshipTemplate.cfg");
+	}
+	public Starship(String config) throws SlickException{
 		super();
 		Properties template = new Properties();
 		try {

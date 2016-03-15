@@ -1,3 +1,4 @@
+package Game;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -38,7 +39,6 @@ public class Gun implements UpdatingObject {
 	}
 	public void update(GameContainer gc, StateBasedGame sbg, int delta){
 		timeSinceFired+=delta;
-		System.out.println(timeSinceFired);
 		Iterator<GameObject> j = bullets.iterator();
 		while (j.hasNext()) {
 			GameObject p = j.next();

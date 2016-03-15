@@ -1,3 +1,4 @@
+package Game;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 
@@ -30,7 +31,7 @@ public class SetupClass extends StateBasedGame{
 	
 	public SetupClass(String string) {
 		super(string);
-		this.addState(new SoloPlay(PLAY));
+		this.addState(new ServerPlay(PLAY));
 		this.addState(new GameOver(GAME_OVER));
 	}
 

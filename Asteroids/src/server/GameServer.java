@@ -7,11 +7,15 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.HashMap;
 
+import org.newdawn.slick.SlickException;
+
 import com.google.gson.Gson;
+
+import Game.Starship;
 
 public class GameServer {
 	static Gson jsonParser;
-	HashMap<String, Box> clients;
+	HashMap<String, Starship> clients;
 	int port;
 	static final boolean REQUIRE_UNIQUE_CLIENTS = false;
 	ServerSocket serverSocket = null;
@@ -59,7 +63,11 @@ public class GameServer {
 			System.err.println("Error: Client at address " + address
 					+ " is already open. Please close any other clients and try again");
 		} else {
-			clients.put(clientThread.getIdentifier(REQUIRE_UNIQUE_CLIENTS), new Box(50, 50));
+			try {
+				clients.put(clientThread.getIdentifier(REQUIRE_UNIQUE_CLIENTS), new Starship());
+			} catch (SlickException e) {
+				e.printStackTrace();
+			}
 			System.out.println("Welcome, " + address.getHostName());
 		}
 	}
@@ -69,7 +77,7 @@ public class GameServer {
 		if (message.equalsIgnoreCase("QUIT")) {
 			closeClient(thread);
 		} else {
-			clients.put(key, new Gson().fromJson(message, Box.class));
+			clients.put(key, new Gson().fromJson(message, Starship.class));
 			thread.out.println(new Gson().toJson(clients.values()));
 		}
 	}
