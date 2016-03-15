@@ -1,4 +1,3 @@
-package server;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.InetAddress;
@@ -7,16 +6,11 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.HashMap;
 
-import org.newdawn.slick.SlickException;
-import org.newdawn.slick.geom.Vector2f;
-
 import com.google.gson.Gson;
 
-import Game.Starship;
-
 public class GameServer {
-	Gson jsonParser;
-	HashMap<String, Vector2f> clients;
+	static Gson jsonParser;
+	HashMap<String, Box> clients;
 	int port;
 	static final boolean REQUIRE_UNIQUE_CLIENTS = true;
 	ServerSocket serverSocket = null;
@@ -64,25 +58,23 @@ public class GameServer {
 			System.err.println("Error: Client at address " + address
 					+ " is already open. Please close any other clients and try again");
 		} else {
-			clients.put(clientThread.getIdentifier(REQUIRE_UNIQUE_CLIENTS), new Vector2f());
+			clients.put(clientThread.getIdentifier(REQUIRE_UNIQUE_CLIENTS), new Box(50, 50));
 			System.out.println("Welcome, " + address.getHostName());
 		}
 	}
 
 	public void onMessageRecieved(String message, EchoThread thread) {
 		String key = thread.getIdentifier(REQUIRE_UNIQUE_CLIENTS);
-		System.out.println(clients);
 		if (message.equalsIgnoreCase("QUIT")) {
 			closeClient(thread);
 		} else {
-			clients.put(key, new Gson().fromJson(message, Vector2f.class));
+			clients.put(key, new Gson().fromJson(message, Box.class));
 			thread.out.println(new Gson().toJson(clients.values()));
 		}
 	}
 
 	public void closeClient(EchoThread clientThread) {
 		clients.remove(clientThread.getIdentifier(REQUIRE_UNIQUE_CLIENTS));
-		System.out.println("done2");
 		clientThread.interrupt();
 		try {
 			new PrintWriter(clientThread.socket.getOutputStream(), true).println("QUIT");

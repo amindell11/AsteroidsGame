@@ -1,4 +1,3 @@
-package Game;
 
 public class Multiplayer {
     public static final String OP_SHOT= "S",

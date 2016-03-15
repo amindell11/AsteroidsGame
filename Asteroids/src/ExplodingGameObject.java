@@ -1,4 +1,3 @@
-package Game;
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -12,8 +11,8 @@ import org.newdawn.slick.state.StateBasedGame;
 
 public class ExplodingGameObject extends GameObject{
 	protected boolean alive;
-	private transient SpriteSheet explosion;
-	private transient Animation explode;
+	private SpriteSheet explosion;
+	private Animation explode;
 	public ExplodingGameObject() throws SlickException{
 		alive=true;
 		explosion = new SpriteSheet("res/Explosion.png", 27,27);

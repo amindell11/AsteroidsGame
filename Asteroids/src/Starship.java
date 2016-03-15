@@ -1,23 +1,21 @@
-package Game;
-
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Properties;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.geom.Circle;
 import org.newdawn.slick.geom.Polygon;
+import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.StateBasedGame;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 public class Starship extends ExplodingGameObject {
 
@@ -31,10 +29,7 @@ public class Starship extends ExplodingGameObject {
 	private ArrayList<Gun> guns;
 	private float[] collisionPoints;
 	// Default position at the center of the screen
-	public Starship() throws SlickException{
-		this("res/shipTemplate.cfg");
-	}
-	public Starship(String config) throws SlickException{
+	public Starship(String config) throws SlickException {
 		super();
 		Properties template = new Properties();
 		try {
@@ -105,11 +100,6 @@ public class Starship extends ExplodingGameObject {
 		super.update(gc, sbg, delta);
 
 	}
-	public HashMap<TypeToken,String> getJsonRepresentation(Gson jsonParser){
-		HashMap<TypeToken,String> map=new HashMap<>();
-		map.put(posJson=jsonParser.toJson(pos));
-
-	}
 	public Shape getCollisionInstance(){
 		//float[] points={30f,5f,30f,height-5f,width/2f,(float)height,(float)width,height/2f,width/2f,0f};
 		//System.out.println(new Gson().toJson(points));
@@ -140,7 +130,7 @@ public class Starship extends ExplodingGameObject {
 	protected boolean checkForCollision() {
 		if (alive) {
 			super.checkForCollision();
-			GameObject collidingWith = isCollidingWith(SoloPlay.getAsteroids());
+			GameObject collidingWith = isCollidingWith(Play.getAsteroids());
 			if(collidingWith!=null){
 				return true;
 			}
@@ -150,15 +140,9 @@ public class Starship extends ExplodingGameObject {
 	}
 	protected void die() {
 		super.die();
-		if(!active)SoloPlay.GameOver();
+		if(!active)Play.GameOver();
 	}
-	public ArrayList<GameObject> getAllProjectiles(){
-		ArrayList<GameObject> projectiles=new ArrayList<>();
-		for(Gun g:guns){
-			projectiles.addAll(g.getBullets());
-		}
-		return projectiles;
-	}
+
 	public String toString() {
 		return "Player Starship";
 	}

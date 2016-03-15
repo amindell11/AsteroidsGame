@@ -1,4 +1,3 @@
-package Game;
 import java.util.Random;
 
 import org.newdawn.slick.GameContainer;
@@ -95,7 +94,7 @@ public class Asteroid extends ExplodingGameObject {
 	public void splitAsteroid() {
 		for (int c = 0; c < hitsLeft; c++) {
 			Asteroid a = new Asteroid(pos, (int) (width / Math.sqrt((double) hitsLeft)), hitsLeft - 1);
-			SoloPlay.addAsteroid(a);
+			Play.addAsteroid(a);
 		}
 	}
 }

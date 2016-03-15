@@ -1,4 +1,3 @@
-package Game;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -46,7 +45,7 @@ public class Projectile extends GameObject implements UpdatingObject{
 	}
 	@Override
 	protected boolean checkForCollision() {
-		GameObject collidingWith = super.isCollidingWith(SoloPlay.getAsteroids());
+		GameObject collidingWith = super.isCollidingWith(Play.getAsteroids());
 		if(collidingWith!=null&&((ExplodingGameObject) collidingWith).isAlive()){
 			collidingWith.die();
 			die();
