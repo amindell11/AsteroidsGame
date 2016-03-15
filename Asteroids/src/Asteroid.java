@@ -6,91 +6,95 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.StateBasedGame;
 
-
-public class Asteroid extends ExplodingGameObject{
+public class Asteroid extends ExplodingGameObject {
 
 	static final float MaxVelocity = 2;
 	static final float MinVelocity = .2f;
-	static final float angularVel=.00f;
-	static final int maxDiam=225;
-	static final int minDiam=150;
+	static final float angularVel = .00f;
+	static final int maxDiam = 225;
+	static final int minDiam = 150;
 	private int hitsLeft;
-	private static Random rnd=new Random();
-	
-	public Asteroid(Vector2f pos, int size,int numSplit){
+	private static Random rnd = new Random();
+
+	public Asteroid(Vector2f pos, int size, int numSplit) {
 		this(size, numSplit);
-		this.pos=pos.copy();
+		this.pos = pos.copy();
 	}
-	
+
 	public Asteroid(int size, int numSplit) {
-		super(getRandomPos(),getRandomSpeed(),size,size);
+		super(getRandomPos(), getRandomSpeed(), size, size);
 		try {
 			ObjectImage = getRandomImage();
 		} catch (SlickException e1) {
 			e1.printStackTrace();
 		}
-		hitsLeft=numSplit;
+		hitsLeft = numSplit;
 	}
-	
-	public Asteroid(){
+
+	public Asteroid() {
 		this(getRandomSize(), 3);
 	}
-	
+
 	// Random Generators
-		private static Image getRandomImage() throws SlickException {
-		String[] files = {"res/DeadAsteroid2.png"};
-		int randomFileIndex=rnd.nextInt(files.length);
-		return(new Image(files[randomFileIndex]));
-	}
-	
-		private static int getRandomSize() {
-		return((int) (rnd.nextInt(maxDiam-minDiam) + minDiam));
-	}
-	
-		private static Vector2f getRandomPos(){
-		int posX=getRandomWithExclusion(rnd,0,0);
-		int posY=getRandomWithExclusion(rnd,0,0);
-		return new Vector2f(posX,posY);
-	}
-	
-		private static Vector2f getRandomSpeed(){
-		return new Vector2f(Math.random() * 360).scale((float) (Math.random()* (MaxVelocity - MinVelocity) + MinVelocity));
-	}
-	
-		private static int getRandomWithExclusion(Random rnd, int start, int end, int... exclude) {
-	    int random = start + rnd.nextInt(end - start + 1 - exclude.length);
-	    for (int ex : exclude) {
-	        if (random < ex) {
-	            break;
-	        }
-	        random++;
-	    }
-	    return random;
+	private static Image getRandomImage() throws SlickException {
+		String[] files = { "res/DeadAsteroid2.png" };
+		int randomFileIndex = rnd.nextInt(files.length);
+		return (new Image(files[randomFileIndex]));
 	}
 
+	private static int getRandomSize() {
+		return ((int) (rnd.nextInt(maxDiam - minDiam) + minDiam));
+	}
+	private static Vector2f getRandomPos() {
+		int posX = getRandomCoord(rnd, 0,SetupClass.ScreenWidth);
+		int posY = getRandomCoord(rnd, 0,SetupClass.ScreenHeight);
+		Vector2f vector2f = new Vector2f(posX, posY);
+		System.out.println(vector2f);
+		return vector2f;
+	}
+
+	private static Vector2f getRandomSpeed() {
+		return new Vector2f(Math.random() * 360)
+				.scale((float) (Math.random() * (MaxVelocity - MinVelocity) + MinVelocity));
+	}
+	private static int getRandomCoord(Random rnd,int min, int max){
+		return rnd.nextInt(max+min)+min;
+	}
+	private static int getRandomWithExclusion(Random rnd, int start, int end, int... exclude) {
+		int random = start + rnd.nextInt(end - start + 1 - exclude.length);
+		for (int ex : exclude) {
+			if (random < ex) {
+				break;
+			}
+			random++;
+		}
+		return random;
+	}
 
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) {
-		rotate((float)angularVel*delta);
+		rotate((float) angularVel * delta);
 		super.update(gc, sbg, delta);
 	}
 
 	@Override
 	protected boolean checkForCollision() {
-		if(alive){
+		if (alive) {
 			return false;
 		}
 		return true;
 	}
-	
+
 	@Override
-	protected void die(){
-		if(alive&&hitsLeft>1)splitAsteroid();
+	protected void die() {
+		if (alive && hitsLeft > 1)
+			splitAsteroid();
 		super.die();
 	}
-	public void splitAsteroid(){
-		for(int c = 0;c<hitsLeft;c++){
-			Asteroid a = new Asteroid(pos,(int)(width/Math.sqrt((double)hitsLeft)),hitsLeft-1);
+
+	public void splitAsteroid() {
+		for (int c = 0; c < hitsLeft; c++) {
+			Asteroid a = new Asteroid(pos, (int) (width / Math.sqrt((double) hitsLeft)), hitsLeft - 1);
 			Play.addAsteroid(a);
-			}
+		}
 	}
 }

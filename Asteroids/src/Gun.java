@@ -33,10 +33,12 @@ public class Gun implements UpdatingObject {
 		for (GameObject b : bullets) {
 			b.render(gc, sbg, g);
 		}
+		if(SetupClass.isDEBUGGING)renderDEBUG(gc,sbg,g);
 		
 	}
 	public void update(GameContainer gc, StateBasedGame sbg, int delta){
 		timeSinceFired+=delta;
+		System.out.println(timeSinceFired);
 		Iterator<GameObject> j = bullets.iterator();
 		while (j.hasNext()) {
 			GameObject p = j.next();
@@ -55,7 +57,8 @@ public class Gun implements UpdatingObject {
 	}
 	@Override
 	public void renderDEBUG(GameContainer gc, StateBasedGame sbg, Graphics g) {
-		
+		g.fillRect(0, 30, timeSinceFired<cooldown?timeSinceFired/10:cooldown/10, 20);
+		g.drawRect(0, 30, cooldown/10, 20);
 	}
 
 }

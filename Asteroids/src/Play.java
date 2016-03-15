@@ -48,7 +48,7 @@ public class Play extends BasicGameState {
 	public void init(GameContainer container, StateBasedGame game)
 			throws SlickException {
 		background = new Image("res/stars.jpg");
-		ship = new Starship("res/shipTemplate.cfg");
+		ship = new Starship("res/shipTemplate2.cfg");
 		score = 0;
 		level = 0;
 		levelTicks = 0;
@@ -89,8 +89,8 @@ public class Play extends BasicGameState {
 
 	// RENDER HUD
 	private void renderHUD(GameContainer gc, StateBasedGame sbg, Graphics g) {
-		g.drawString("Score: " + score, SetupClass.ScreenWidth,
-				SetupClass.ScreenHeight / 100); // draw Score
+		g.drawString("Score: " + score, SetupClass.ScreenWidth-100,
+				SetupClass.ScreenHeight / 70); // draw Score
 
 		if (levelTicks < 5)
 			g.drawString("Score: " + score, SetupClass.ScreenWidth,
