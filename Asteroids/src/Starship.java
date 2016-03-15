@@ -130,7 +130,7 @@ public class Starship extends ExplodingGameObject {
 	protected boolean checkForCollision() {
 		if (alive) {
 			super.checkForCollision();
-			GameObject collidingWith = isCollidingWith(Play.getAsteroids());
+			GameObject collidingWith = isCollidingWith(SoloPlay.getAsteroids());
 			if(collidingWith!=null){
 				return true;
 			}
@@ -140,9 +140,15 @@ public class Starship extends ExplodingGameObject {
 	}
 	protected void die() {
 		super.die();
-		if(!active)Play.GameOver();
+		if(!active)SoloPlay.GameOver();
 	}
-
+	public ArrayList<GameObject> getAllProjectiles(){
+		ArrayList<GameObject> projectiles=new ArrayList<>();
+		for(Gun g:guns){
+			projectiles.addAll(g.getBullets());
+		}
+		return projectiles;
+	}
 	public String toString() {
 		return "Player Starship";
 	}

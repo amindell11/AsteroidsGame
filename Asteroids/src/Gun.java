@@ -60,6 +60,8 @@ public class Gun implements UpdatingObject {
 		g.fillRect(0, 30, timeSinceFired<cooldown?timeSinceFired/10:cooldown/10, 20);
 		g.drawRect(0, 30, cooldown/10, 20);
 	}
-
+	public ArrayList<GameObject> getBullets(){
+		return bullets;
+	}
 }
 

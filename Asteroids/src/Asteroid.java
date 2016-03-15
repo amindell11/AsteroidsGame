@@ -94,7 +94,7 @@ public class Asteroid extends ExplodingGameObject {
 	public void splitAsteroid() {
 		for (int c = 0; c < hitsLeft; c++) {
 			Asteroid a = new Asteroid(pos, (int) (width / Math.sqrt((double) hitsLeft)), hitsLeft - 1);
-			Play.addAsteroid(a);
+			SoloPlay.addAsteroid(a);
 		}
 	}
 }

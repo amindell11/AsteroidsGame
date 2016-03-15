@@ -10,7 +10,7 @@ import org.newdawn.slick.state.StateBasedGame;
 public class SetupClass extends StateBasedGame{
 	public static final int PLAY = 0;
 	public static final int GAME_OVER = 1;
-	public static final boolean isDEBUGGING=true;
+	public static final boolean isDEBUGGING=false;
 	
 	
 	
@@ -30,7 +30,7 @@ public class SetupClass extends StateBasedGame{
 	
 	public SetupClass(String string) {
 		super(string);
-		this.addState(new Play(PLAY));
+		this.addState(new SoloPlay(PLAY));
 		this.addState(new GameOver(GAME_OVER));
 	}
 

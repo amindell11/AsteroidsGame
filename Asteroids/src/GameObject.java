@@ -69,14 +69,14 @@ public abstract class GameObject {
 	 * @param delta
 	 */
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) {
-			if (checkForCollision()) {
+		/*	if (checkForCollision()) {
 				die();
-			} else {
+			} else {*/
 				move();
 				wrapOnScreen();
 				Shape collisionTemp=getCollisionInstance().transform(Transform.createTranslateTransform(pos.getX()-width/2, pos.getY()-height/2));
 				collisionModel=collisionTemp.transform(Transform.createRotateTransform((float) Math.toRadians(getRotation()), pos.x,pos.y));
-			}
+			//}
 	}
 
 	// WRAP OBJECT TO VISIBLE SCREEN SPACE
