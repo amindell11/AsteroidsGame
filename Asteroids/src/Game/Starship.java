@@ -4,6 +4,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Properties;
 
 import org.newdawn.slick.GameContainer;
@@ -16,6 +17,7 @@ import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.StateBasedGame;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 public class Starship extends ExplodingGameObject {
 
@@ -30,7 +32,7 @@ public class Starship extends ExplodingGameObject {
 	private float[] collisionPoints;
 	// Default position at the center of the screen
 	public Starship() throws SlickException{
-		this("StarshipTemplate.cfg");
+		this("res/shipTemplate.cfg");
 	}
 	public Starship(String config) throws SlickException{
 		super();
@@ -101,6 +103,11 @@ public class Starship extends ExplodingGameObject {
 			turningRight = false;
 		}
 		super.update(gc, sbg, delta);
+
+	}
+	public HashMap<TypeToken,String> getJsonRepresentation(Gson jsonParser){
+		HashMap<TypeToken,String> map=new HashMap<>();
+		map.put(posJson=jsonParser.toJson(pos));
 
 	}
 	public Shape getCollisionInstance(){

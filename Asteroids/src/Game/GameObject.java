@@ -12,15 +12,22 @@ import org.newdawn.slick.geom.Transform;
 import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.StateBasedGame;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.reflect.TypeToken;
+
 public abstract class GameObject {
+	@Expose
 	protected Vector2f pos;
+	@Expose
 	protected Vector2f speed;
+	@Expose
 	protected int width;
+	@Expose
 	protected int height;
 	protected Image ObjectImage;
+	@Expose
 	protected Shape collisionModel;
 	protected boolean active;
-
 	public GameObject() {
 		this(new Vector2f(SetupClass.ScreenWidth / 2,
 				SetupClass.ScreenHeight / 2),new Vector2f(0, 0),0,0);
@@ -153,6 +160,9 @@ public abstract class GameObject {
 
 	public float getY() {
 		return pos.getY();
+	}
+	public Vector2f getPos(){
+		return pos;
 	}
 
 	public float getRotation() {

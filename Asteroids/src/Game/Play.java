@@ -49,7 +49,7 @@ public class Play extends BasicGameState {
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g)
 			throws SlickException {
 		renderBackground(gc, sbg, g);
-		renderShip(gc, sbg, g);
+		//renderShip(gc, sbg, g);
 		if (SetupClass.isDEBUGGING)
 			renderDEBUG(gc, sbg, g);
 	}

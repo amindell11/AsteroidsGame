@@ -37,7 +37,7 @@ public class SetupClass extends StateBasedGame{
 
 	@Override
 	public void initStatesList(GameContainer app) throws SlickException {
-		this.getState(PLAY).init(app, this);
+		//this.getState(PLAY).init(app, this);
 		this.getState(GAME_OVER).init(app, this);
 		this.enterState(PLAY);
 	}

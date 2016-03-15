@@ -12,8 +12,8 @@ import org.newdawn.slick.state.StateBasedGame;
 
 public class ExplodingGameObject extends GameObject{
 	protected boolean alive;
-	private SpriteSheet explosion;
-	private Animation explode;
+	private transient SpriteSheet explosion;
+	private transient Animation explode;
 	public ExplodingGameObject() throws SlickException{
 		alive=true;
 		explosion = new SpriteSheet("res/Explosion.png", 27,27);

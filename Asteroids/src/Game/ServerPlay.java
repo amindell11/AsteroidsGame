@@ -14,6 +14,7 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.TrueTypeFont;
+import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.StateBasedGame;
 
 import com.google.gson.Gson;
@@ -28,7 +29,7 @@ public class ServerPlay extends Play {
 	PrintWriter out;
 	Input input;
 	BufferedReader in;
-	ArrayList<Starship> clients;
+	ArrayList<Vector2f> clients;
 	long ping;
 
 	@Override
@@ -44,21 +45,20 @@ public class ServerPlay extends Play {
 			in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			out = new PrintWriter(socket.getOutputStream(), true);
 		} catch (IOException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 	}
 
 	@Override
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
 		super.update(gc, sbg, delta);
-		sendUpdate(ship);
+		sendUpdate(ship.pos);
 		recieveUpdate(gc);
 	}
 
 	public void sendUpdate(Object obj) {
-		out.println(new Gson().toJson(ship));
+		out.println(new Gson().toJson(obj));
 	}
-
 	public void recieveUpdate(GameContainer gc) {
 		long time = System.nanoTime();
 		String update = null;
@@ -67,7 +67,7 @@ public class ServerPlay extends Play {
 				if (update.equals("QUIT")) {
 					gc.exit();
 				} else {
-					clients = new Gson().fromJson(update, new TypeToken<List<Starship>>() {
+					clients = new Gson().fromJson(update, new TypeToken<List<Vector2f>>() {
 					}.getType());
 				}
 			}
@@ -80,23 +80,18 @@ public class ServerPlay extends Play {
 
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
 		super.render(gc, sbg, g);
-		for (Starship b : clients) {
-			b.render(gc, sbg, g);
+		System.out.println(clients);
+		for (Vector2f b : clients) {
+			//g.fillOval(b.getX()-5, b.getY()-5, 10, 10);
+			Starship s=new Starship();
+			s.pos=b;
+			s.render(gc, sbg, g);
 		}
-		String string = ping + "ms";
-		g.setFont(new TrueTypeFont(new Font("Verdana", Font.BOLD, 12), true));
-		g.drawString(string,
-				gc.getWidth() - new TrueTypeFont(new Font("Verdana", Font.BOLD, 12), true).getWidth(string), 0);
 	}
 
 	@Override
 	public void leave(GameContainer gc, StateBasedGame sbg) {
-		out.println("QUIT");
-		try {
-			socket.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+
 	}
 
 	public ServerPlay(int play) {
