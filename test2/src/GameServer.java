@@ -10,9 +10,9 @@ import com.google.gson.Gson;
 
 public class GameServer {
 	static Gson jsonParser;
-	HashMap<String, Box> clients;
+	HashMap<String, GameObject> clients;
 	int port;
-	static final boolean REQUIRE_UNIQUE_CLIENTS = true;
+	static final boolean REQUIRE_UNIQUE_CLIENTS = false;
 	ServerSocket serverSocket = null;
 
 	public GameServer(int port) {
@@ -58,7 +58,7 @@ public class GameServer {
 			System.err.println("Error: Client at address " + address
 					+ " is already open. Please close any other clients and try again");
 		} else {
-			clients.put(clientThread.getIdentifier(REQUIRE_UNIQUE_CLIENTS), new Box(50, 50));
+			clients.put(clientThread.getIdentifier(REQUIRE_UNIQUE_CLIENTS), new Starship(50, 50,""));
 			System.out.println("Welcome, " + address.getHostName());
 		}
 	}
@@ -68,7 +68,7 @@ public class GameServer {
 		if (message.equalsIgnoreCase("QUIT")) {
 			closeClient(thread);
 		} else {
-			clients.put(key, new Gson().fromJson(message, Box.class));
+			clients.put(key, new Gson().fromJson(message, Starship.class));
 			thread.out.println(new Gson().toJson(clients.values()));
 		}
 	}

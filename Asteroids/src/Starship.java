@@ -22,7 +22,7 @@ public class Starship extends ExplodingGameObject {
 	private int maxSpeed;
 	private float acceleration;
 	private float velocityDecay;
-	private float turnSpeed;
+	private float turnSpeed,turnAcceleration,turnDecay;
 	private boolean accelerating, turningLeft, turningRight;
 	private Image iconEnginesOff;
 	private Image iconEnginesOn;
@@ -46,7 +46,8 @@ public class Starship extends ExplodingGameObject {
 		maxSpeed = Integer.parseInt(template.getProperty("maxSpeed"));
 		acceleration = Float.parseFloat(template.getProperty("acceleration"));
 		velocityDecay =Float.parseFloat(template.getProperty("velocityDecay"));
-		turnSpeed=Float.parseFloat(template.getProperty("turnSpeed"));
+		turnAcceleration=Float.parseFloat(template.getProperty("turnAcceleration"));
+		turnDecay=Float.parseFloat(template.getProperty("turnDecay"));
 		int shotDelay = Integer.parseInt(template.getProperty("shotDelay"));
 		String ammo=template.getProperty("ammo");
 		guns=new ArrayList<>();
@@ -55,6 +56,7 @@ public class Starship extends ExplodingGameObject {
 		ObjectImage = iconEnginesOff;
 		collisionPoints=new Gson().fromJson(template.getProperty("collision"),float[].class);
 		alive = true;
+		turnSpeed=0f;
 	}
 
 	// RENDER
@@ -83,10 +85,14 @@ public class Starship extends ExplodingGameObject {
 		}
 
 		if (alive) {
-			if (turningLeft)
-				rotate((float) -turnSpeed * delta);
-			if (turningRight)
-				rotate((float) turnSpeed * delta);
+			if (turningLeft){
+				turnSpeed-=turnAcceleration*delta;
+			}
+			else if (turningRight){
+				turnSpeed+=turnAcceleration*delta;
+			}else if(Math.abs(turnSpeed)>0){
+				turnSpeed-=(Math.abs(turnSpeed)/turnSpeed)*turnDecay*delta;
+			}
 			if (accelerating && speed.length() < maxSpeed)
 				speed = speed.add(new Vector2f(getRotation())
 						.scale(acceleration));
@@ -96,6 +102,7 @@ public class Starship extends ExplodingGameObject {
 			turningLeft = false;
 			accelerating = false;
 			turningRight = false;
+			rotate((float) turnSpeed * delta);
 		}
 		super.update(gc, sbg, delta);
 
