@@ -18,7 +18,7 @@ public class Starship extends GameObject {
 	private Gun mainGun;
 	public Starship(int width, int height,String path) {
 		super(new Vector2f(0,0), new Vector2f(0,0), width, height,path);
-		mainGun=new Gun(new Projectile("res/Beam1.png",30f,.5f),500);
+		mainGun=new Gun(new Projectile("Beam1.png",30f,.5f),500);
 	}
 	
 	public void update(GameContainer gc, int delta) throws SlickException {

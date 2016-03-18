@@ -8,13 +8,13 @@ import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.StateBasedGame;
 
 public class Gun {
-	private ArrayList<GameObject> bullets;
+	private ArrayList<Projectile> bullets;
 	private int timeSinceFired;
 	private int cooldown;
 	private Projectile ammo;
 	public Gun(Projectile ammo) {
 		this.ammo=ammo;
-		bullets = new ArrayList<GameObject>();
+		bullets = new ArrayList<Projectile>();
 		this.cooldown=3000;
 		timeSinceFired=cooldown;
 	}
@@ -26,7 +26,7 @@ public class Gun {
 	private void addBullet(Projectile b){
 		bullets.add(b);
 	}
-	public ArrayList<GameObject> getMyLasers(){
+	public ArrayList<Projectile> getMyLasers(){
 		return bullets;
 	}
 
@@ -39,9 +39,9 @@ public class Gun {
 	}
 	public void update(GameContainer gc, int delta) throws SlickException{
 		timeSinceFired+=delta;
-		Iterator<GameObject> j = bullets.iterator();
+		Iterator<Projectile> j = bullets.iterator();
 		while (j.hasNext()) {
-			GameObject p = j.next();
+			Projectile p = j.next();
 			p.update(gc, delta);
 			if (!p.isActive()) {
 				j.remove();
