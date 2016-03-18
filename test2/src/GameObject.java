@@ -21,11 +21,13 @@ public abstract class GameObject {
 	protected transient Image ObjectImage;
 	protected String path;
 	protected float rotation;
+	protected boolean active;
 	public GameObject() {
 		this(new Vector2f(0,0),new Vector2f(0, 0),0,0,"Ship.png");
 	}
 
 	public GameObject(Vector2f pos, Vector2f speed, int width, int height,String path) {
+		active=true;
 		this.pos=pos;
 		this.speed = speed;
 		this.height = height;
@@ -41,7 +43,12 @@ public abstract class GameObject {
 	 * @param g
 	 */
 	public void render(GameContainer gc,Graphics g) throws SlickException {
-		setObjectImage(new Image(path));
+		
+		try{Image image = new Image(path);
+		setObjectImage(image);
+		}catch(NullPointerException e){
+			ObjectImage=new Image(10,10);//sometimes the image gets initialized as null, to avoid this it is set to a blank image for one update in hopes of having a better outcome next time...?
+		}
 		g.setColor(Color.white);
 		g.fillOval(ObjectImage.getCenterOfRotationX()-25, ObjectImage.getCenterOfRotationX()-25, 50, 50);
 		ObjectImage.draw(pos.getX()-width/2, pos.getY()-height/2, width, height);
@@ -108,6 +115,10 @@ public abstract class GameObject {
 	public void updateImageRotation(){
 		ObjectImage.setCenterOfRotation(width/2, height/2);
 		ObjectImage.setRotation(rotation);
+	}
+
+	public boolean isActive() {
+		return active;
 	}
 
 }

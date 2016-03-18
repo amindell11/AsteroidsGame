@@ -68,7 +68,9 @@ public class GameServer {
 		if (message.equalsIgnoreCase("QUIT")) {
 			closeClient(thread);
 		} else {
-			clients.put(key, new Gson().fromJson(message, Starship.class));
+			System.out.println(message);
+			Starship fromJson = new Gson().fromJson(message, Starship.class);
+			clients.put(key, fromJson);
 			thread.out.println(new Gson().toJson(clients.values()));
 		}
 	}

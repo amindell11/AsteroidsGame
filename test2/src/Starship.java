@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 
 import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Vector2f;
@@ -14,11 +15,14 @@ public class Starship extends GameObject {
 	private float velocityDecay=.99f;
 	private float turnSpeed=.22f;
 	private boolean accelerating, turningLeft, turningRight;
+	private Gun mainGun;
 	public Starship(int width, int height,String path) {
 		super(new Vector2f(0,0), new Vector2f(0,0), width, height,path);
+		mainGun=new Gun(new Projectile("res/Beam1.png",30f,.5f),500);
 	}
 	
 	public void update(GameContainer gc, int delta) throws SlickException {
+		mainGun.update(gc, delta);
 			setObjectImage(new Image(path));
 			if (turningLeft)
 				rotate((float) -turnSpeed * delta);
@@ -34,6 +38,10 @@ public class Starship extends GameObject {
 			turningRight = false;
 		super.update(gc, delta);
 	}
+	public void render(GameContainer gc, Graphics g) throws SlickException{
+		super.render(gc, g);
+		mainGun.render(gc, g);
+	}
 	public void ForwardKeyPressed() {
 		accelerating = true;
 	}
@@ -47,5 +55,8 @@ public class Starship extends GameObject {
 	}
 
 	public void BackKeyPressed() {
+	}
+	public void shoot(){
+	mainGun.shoot(pos.getX(), pos.getY(),getRotation());
 	}
 }

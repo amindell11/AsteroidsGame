@@ -79,12 +79,16 @@ public class GameClient extends BasicGame {
 		if (input.isKeyDown(Input.KEY_D)) {
 			clientControlledObject.RightKeyPressed();
 		}
+		if (input.isKeyDown(Input.KEY_SPACE)) {
+			clientControlledObject.shoot();
+		}
 		clientControlledObject.update(gc,delta);
 		sendUpdate(clientControlledObject);
 		recieveUpdate(gc);
 	}
 	public void sendUpdate(Object obj){
 		String json = new Gson().toJson(clientControlledObject);
+		System.out.println(json);
 		out.println(json);
 	}
 	public void recieveUpdate(GameContainer gc){
@@ -101,13 +105,12 @@ public class GameClient extends BasicGame {
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
+		} 
 		ping=System.nanoTime()-time;
 		ping/=1000000;
 	}
-	public void render(GameContainer container, Graphics g) throws SlickException {
+	public void render(GameContainer container, Graphics g ) throws SlickException {
 		for (Starship b : clients) {
-			System.out.println(b.pos);
 			b.render(container, g);
 		}
 	}
