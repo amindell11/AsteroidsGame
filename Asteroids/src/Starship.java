@@ -22,12 +22,14 @@ public class Starship extends ExplodingGameObject {
 	private int maxSpeed;
 	private float acceleration;
 	private float velocityDecay;
-	private float turnSpeed,turnAcceleration,turnDecay;
+	private float turnSpeed, turnAcceleration, turnDecay;
 	private boolean accelerating, turningLeft, turningRight;
 	private Image iconEnginesOff;
 	private Image iconEnginesOn;
+	float maxTurnVel;
 	private ArrayList<Gun> guns;
 	private float[] collisionPoints;
+
 	// Default position at the center of the screen
 	public Starship(String config) throws SlickException {
 		super();
@@ -45,24 +47,29 @@ public class Starship extends ExplodingGameObject {
 		iconEnginesOn = new Image(template.getProperty("iconEnginesOn"));
 		maxSpeed = Integer.parseInt(template.getProperty("maxSpeed"));
 		acceleration = Float.parseFloat(template.getProperty("acceleration"));
-		velocityDecay =Float.parseFloat(template.getProperty("velocityDecay"));
-		turnAcceleration=Float.parseFloat(template.getProperty("turnAcceleration"));
-		turnDecay=Float.parseFloat(template.getProperty("turnDecay"));
+		velocityDecay = Float.parseFloat(template.getProperty("velocityDecay"));
+		turnAcceleration = Float.parseFloat(template
+				.getProperty("turnAcceleration"));
+		turnDecay = Float.parseFloat(template.getProperty("turnDecay"));
 		int shotDelay = Integer.parseInt(template.getProperty("shotDelay"));
-		String ammo=template.getProperty("ammo");
-		guns=new ArrayList<>();
-		guns.add(new Gun(new Missile(new Image("res/missile 1.png"),1.2f,1f,3,.5f),4000));
-		guns.add(new Gun(new Projectile(new Image("res/Beam1.png"),30f,.5f),500));
+		String ammo = template.getProperty("ammo");
+		guns = new ArrayList<>();
+		guns.add(new Gun(new Missile(new Image("res/missile 1.png"), 1.2f, 1f,
+				3, .5f), 4000));
+		guns.add(new Gun(new Projectile(new Image("res/Beam1.png"), 30f, .5f),
+				500));
 		ObjectImage = iconEnginesOff;
-		collisionPoints=new Gson().fromJson(template.getProperty("collision"),float[].class);
+		maxTurnVel= Float.parseFloat(template.getProperty("maxTurnVel"));
+		collisionPoints = new Gson().fromJson(
+				template.getProperty("collision"), float[].class);
 		alive = true;
-		turnSpeed=0f;
+		turnSpeed = 0f;
 	}
 
 	// RENDER
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) {
 		if (alive) {
-			for(Gun gun:guns){
+			for (Gun gun : guns) {
 				gun.render(gc, sbg, g);
 			}
 		}
@@ -80,19 +87,22 @@ public class Starship extends ExplodingGameObject {
 
 	// UPDATE
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) {
-		for(Gun gun:guns){
+		for (Gun gun : guns) {
 			gun.update(gc, sbg, delta);
 		}
 
 		if (alive) {
-			if (turningLeft){
-				turnSpeed-=turnAcceleration*delta;
+			if (Math.abs(turnSpeed) < maxTurnVel) {
+				if (turningLeft) {
+					turnSpeed -= turnAcceleration * delta;
+				} else if (turningRight) {
+					turnSpeed += turnAcceleration * delta;
+				}
 			}
-			else if (turningRight){
-				turnSpeed+=turnAcceleration*delta;
-			}else if(Math.abs(turnSpeed)>0){
-				turnSpeed-=(Math.abs(turnSpeed)/turnSpeed)*turnDecay*delta;
-			}
+			if (Math.abs(turnSpeed) > 0)
+				turnSpeed -= (Math.abs(turnSpeed) / turnSpeed) * turnDecay
+						* delta;
+
 			if (accelerating && speed.length() < maxSpeed)
 				speed = speed.add(new Vector2f(getRotation())
 						.scale(acceleration));
@@ -107,14 +117,17 @@ public class Starship extends ExplodingGameObject {
 		super.update(gc, sbg, delta);
 
 	}
-	public Shape getCollisionInstance(){
-		//float[] points={30f,5f,30f,height-5f,width/2f,(float)height,(float)width,height/2f,width/2f,0f};
-		//System.out.println(new Gson().toJson(points));
-		return collisionPoints!=null?new Polygon(collisionPoints):super.getCollisionInstance();
+
+	public Shape getCollisionInstance() {
+		// float[]
+		// points={30f,5f,30f,height-5f,width/2f,(float)height,(float)width,height/2f,width/2f,0f};
+		// System.out.println(new Gson().toJson(points));
+		return collisionPoints != null ? new Polygon(collisionPoints) : super
+				.getCollisionInstance();
 	}
+
 	public void shoot(int gunIndex) {
-			guns.get(gunIndex).shoot(pos.getX(), pos.getY(),
-					getRotation());
+		guns.get(gunIndex).shoot(pos.getX(), pos.getY(), getRotation());
 	}
 
 	public void ForwardKeyPressed() {
@@ -138,16 +151,18 @@ public class Starship extends ExplodingGameObject {
 		if (alive) {
 			super.checkForCollision();
 			GameObject collidingWith = isCollidingWith(Play.getAsteroids());
-			if(collidingWith!=null){
+			if (collidingWith != null) {
 				return true;
 			}
 			return false;
 		}
 		return true;
 	}
+
 	protected void die() {
 		super.die();
-		if(!active)Play.GameOver();
+		if (!active)
+			Play.GameOver();
 	}
 
 	public String toString() {

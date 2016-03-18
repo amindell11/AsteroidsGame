@@ -23,7 +23,7 @@ import com.google.gson.reflect.TypeToken;
 public class GameClient extends BasicGame {
 	static final int PORT = 8000;
 	static final boolean sameComputer = true;
-	String hostName = "10.208.11.57";
+	String hostName = "10.208.8.250";
 	Starship clientControlledObject;
 	int portNumber = 8000;
 	Socket socket;
@@ -88,7 +88,6 @@ public class GameClient extends BasicGame {
 	}
 	public void sendUpdate(Object obj){
 		String json = new Gson().toJson(clientControlledObject);
-		System.out.println(json);
 		out.println(json);
 	}
 	public void recieveUpdate(GameContainer gc){

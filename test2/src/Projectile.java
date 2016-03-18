@@ -22,7 +22,7 @@ public class Projectile extends GameObject{
 		this(new Vector2f(0,0),0,laserImage,launchVelocity,maxLifeTime);
 		active=false;
 	}
-	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException{
+	public void update(GameContainer gc, int delta) throws SlickException{
 		setRotation((float)speed.getTheta());
 		if(active){
 			super.update(gc, delta);

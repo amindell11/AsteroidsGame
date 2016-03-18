@@ -49,8 +49,6 @@ public abstract class GameObject {
 		}catch(NullPointerException e){
 			ObjectImage=new Image(10,10);//sometimes the image gets initialized as null, to avoid this it is set to a blank image for one update in hopes of having a better outcome next time...?
 		}
-		g.setColor(Color.white);
-		g.fillOval(ObjectImage.getCenterOfRotationX()-25, ObjectImage.getCenterOfRotationX()-25, 50, 50);
 		ObjectImage.draw(pos.getX()-width/2, pos.getY()-height/2, width, height);
 	}
 	public Shape getCollisionInstance(){
