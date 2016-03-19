@@ -67,15 +67,14 @@ public class Starship extends GameObject {
 			}
 		}
 		super.render(gc, g);
-
+		accelerating = false;
 	}
 	@Override
 	public void setObjectImage(){
-		System.out.println("setting Image");
-		System.out.println(iconEnginesOn);
 		int v = (int) Math.ceil(Math.random() - .1);
-		if (accelerating && v == 1)
+		if (accelerating && v == 1){
 			setObjectImage(iconEnginesOn);
+		}
 		else
 			setObjectImage(iconEnginesOff);
 	}
@@ -95,14 +94,13 @@ public class Starship extends GameObject {
 				}
 			}
 			if (Math.abs(turnSpeed) > 0)
-				turnSpeed -= (Math.abs(turnSpeed) / turnSpeed) * turnDecay * delta;
+				turnSpeed /=(turnDecay * delta);
 
 			if (accelerating && speed.length() < maxSpeed)
 				speed = speed.add(new Vector2f(getRotation()).scale(acceleration));
 			if (!accelerating)
 				speed = speed.scale(velocityDecay);
 			turningLeft = false;
-			accelerating = false;
 			turningRight = false;
 			rotate((float) turnSpeed * delta);
 		}

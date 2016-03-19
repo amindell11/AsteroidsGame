@@ -15,6 +15,7 @@ import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.TrueTypeFont;
@@ -36,7 +37,7 @@ public class GameClient extends BasicGame {
 	HashMap<String,Starship> clients;
 	long ping;
 	String id;
-
+	Image background;
 	public GameClient() {
 		super("Client");
 	}
@@ -56,6 +57,7 @@ public class GameClient extends BasicGame {
 
 	@Override
 	public void init(GameContainer container) throws SlickException {
+		background=new Image("res/stars.jpg");
 		clients = new HashMap<>();
 		try {
 			input = new Input(400);
@@ -99,7 +101,7 @@ public class GameClient extends BasicGame {
 			clientControlledObject.RightKeyPressed();
 		}
 		if (input.isKeyDown(Input.KEY_SPACE)) {
-			clientControlledObject.shoot(0);
+			clientControlledObject.shoot(1);
 		}
 		clientControlledObject.update(gc, delta);
 		sendUpdate(clientControlledObject);
@@ -131,6 +133,7 @@ public class GameClient extends BasicGame {
 	}
 
 	public void render(GameContainer container, Graphics g) throws SlickException {
+		background.draw(0,0,1280,800);
 		for (Starship b : clients.values()) {
 			b.render(container, g);
 		}
