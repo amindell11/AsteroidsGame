@@ -8,6 +8,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Scanner;
 
 import javax.swing.plaf.synth.SynthSpinnerUI;
 
@@ -27,7 +28,7 @@ import com.google.gson.reflect.TypeToken;
 public class GameClient extends BasicGame {
 	static final int PORT = 8000;
 	static final boolean sameComputer = true;
-	String hostName = "10.208.8.250";
+	String hostName;
 	Starship clientControlledObject;
 	int portNumber = 8000;
 	Socket socket;
@@ -44,10 +45,12 @@ public class GameClient extends BasicGame {
 
 	public static void main(String[] arguments) {
 		try {
-			AppGameContainer app = new AppGameContainer(new GameClient());
+			GameClient client= new GameClient();
+			client.openServer();
+			AppGameContainer app = new AppGameContainer(client);
 			app.setDisplayMode(1280, 800, false);
 			app.setAlwaysRender(true);
-			app.setShowFPS(false);
+			app.setShowFPS(true);
 			app.setTargetFrameRate(60);
 			app.start();
 		} catch (SlickException e) {
@@ -59,10 +62,18 @@ public class GameClient extends BasicGame {
 	public void init(GameContainer container) throws SlickException {
 		background=new Image("res/stars.jpg");
 		clients = new HashMap<>();
+		input = new Input(400);
+	}
+	public void openServer(){
 		try {
-			input = new Input(400);
-			if (sameComputer)
+			if (sameComputer){
 				hostName = InetAddress.getLocalHost().getHostAddress();
+			}else{
+				Scanner inp=new Scanner(System.in);
+				System.out.println("please input host ip: \n");
+				hostName=inp.nextLine().trim();
+				inp.close();
+			}
 			socket = new Socket(hostName, portNumber);
 			in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			out = new PrintWriter(socket.getOutputStream(), true);
@@ -81,13 +92,12 @@ public class GameClient extends BasicGame {
 	{
 		e.printStackTrace();
 	}
-
 	}
 
 	@Override
 	public void update(GameContainer gc, int delta) throws SlickException {
 		Starship var = clients.get(id);
-		clientControlledObject=var!=null?var:new Starship("res/shipTemplate.cfg");
+		clientControlledObject=var!=null?var:new Starship("res/shipTemplate2.cfg");
 		if (input.isKeyDown(Input.KEY_W)) {
 			clientControlledObject.ForwardKeyPressed();
 		}

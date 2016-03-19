@@ -48,7 +48,6 @@ public abstract class GameObject {
 	 */
 	public void render(GameContainer gc, Graphics g) throws SlickException {
 		if (active) {
-			g.draw(getCollisionModel());
 			try {
 				setObjectImage();
 			} catch (NullPointerException e) {
