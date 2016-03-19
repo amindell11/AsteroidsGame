@@ -4,7 +4,13 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+
+import javax.swing.plaf.synth.SynthSpinnerUI;
+
+import org.newdawn.slick.SlickException;
 
 import com.google.gson.Gson;
 
@@ -41,10 +47,14 @@ public class GameServer {
 		} catch (IOException e) {
 			System.out.println("I/O error: " + e);
 		}
-		addClient(socket);
+		try {
+			addClient(socket);
+		} catch (SlickException e) {
+			e.printStackTrace();
+		}
 	}
 
-	public void addClient(Socket socket) {
+	public void addClient(Socket socket) throws SlickException {
 		InetAddress address = socket.getInetAddress();
 		EchoThread clientThread = new EchoThread(socket, new EventHandler() {
 			@Override
@@ -58,8 +68,9 @@ public class GameServer {
 			System.err.println("Error: Client at address " + address
 					+ " is already open. Please close any other clients and try again");
 		} else {
-			clients.put(clientThread.getIdentifier(REQUIRE_UNIQUE_CLIENTS), new Starship(50, 50,""));
+			clients.put(clientThread.getIdentifier(REQUIRE_UNIQUE_CLIENTS), new Starship("res/blank.cfg"));
 			System.out.println("Welcome, " + address.getHostName());
+			clientThread.out.println(clientThread.getIdentifier(REQUIRE_UNIQUE_CLIENTS));
 		}
 	}
 
@@ -70,7 +81,20 @@ public class GameServer {
 		} else {
 			Starship fromJson = new Gson().fromJson(message, Starship.class);
 			clients.put(key, fromJson);
-			thread.out.println(new Gson().toJson(clients.values()));
+			checkForCollision(fromJson);
+			thread.out.println(new Gson().toJson(clients));
+		}
+	}
+	public void checkForCollision(Starship ship){
+		ArrayList<GameObject> otherShips=new ArrayList<GameObject>(clients.values());
+		otherShips.remove(ship);
+		for(GameObject otherShip:otherShips){
+			Projectile collidingWith = ship.isCollidingWith(((Starship) otherShip).getProjectiles());
+			if(collidingWith!=null){
+				collidingWith.die();
+				ship.die();
+				clients.remove(ship);
+			}
 		}
 	}
 

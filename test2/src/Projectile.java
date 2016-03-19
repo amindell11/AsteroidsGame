@@ -32,7 +32,7 @@ public class Projectile extends GameObject{
 			}
 		}
 	}
-	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException{
+	public void render(GameContainer gc, Graphics g) throws SlickException{
 		if(active){
 			super.render(gc, g);
 		}
