@@ -24,8 +24,8 @@ public class Starship extends GameObject {
 	private float velocityDecay;
 	private float turnSpeed, turnAcceleration, turnDecay;
 	private boolean accelerating, turningLeft, turningRight;
-	private transient String iconEnginesOff;
-	private transient String iconEnginesOn;
+	private String iconEnginesOff;
+	private String iconEnginesOn;
 	float maxTurnVel;
 	private ArrayList<Gun> guns;
 
@@ -71,6 +71,8 @@ public class Starship extends GameObject {
 	}
 	@Override
 	public void setObjectImage(){
+		System.out.println("setting Image");
+		System.out.println(iconEnginesOn);
 		int v = (int) Math.ceil(Math.random() - .1);
 		if (accelerating && v == 1)
 			setObjectImage(iconEnginesOn);

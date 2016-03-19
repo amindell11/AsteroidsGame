@@ -52,6 +52,7 @@ public abstract class GameObject {
 			try {
 				setObjectImage();
 			} catch (NullPointerException e) {
+				System.out.println("aa");
 				ObjectImage = new Image(10, 10);
 			}
 			ObjectImage.draw(pos.getX() - width / 2, pos.getY() - height / 2, width, height);
