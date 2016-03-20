@@ -1,5 +1,6 @@
 import java.awt.Font;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -27,7 +28,7 @@ import com.google.gson.reflect.TypeToken;
 
 public class GameClient extends BasicGame {
 	static final int PORT = 8000;
-	static final boolean sameComputer = true;
+	static final boolean sameComputer = false;
 	String hostName;
 	Starship clientControlledObject;
 	int portNumber = 8000;
@@ -44,6 +45,7 @@ public class GameClient extends BasicGame {
 	}
 
 	public static void main(String[] arguments) {
+		System.setProperty("org.lwjgl.librarypath", new File("windows").getAbsolutePath());
 		try {
 			GameClient client= new GameClient();
 			client.openServer();

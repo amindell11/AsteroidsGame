@@ -15,17 +15,18 @@ public class EchoThread extends Thread {
 	public EchoThread(Socket clientSocket, EventHandler onMessageRecieved) {
 		this.socket = clientSocket;
 		this.onMessageRecieved = onMessageRecieved;
-	}
-
-	public void run() {
 		try {
 			inp = socket.getInputStream();
 			brinp = new BufferedReader(new InputStreamReader(inp));
 			out = new PrintWriter(socket.getOutputStream(), true);
 
 		} catch (IOException e) {
-			return;
+			e.printStackTrace();
 		}
+	}
+
+	public void run() {
+
 		String line;
 		while (!isInterrupted()) {
 			try {

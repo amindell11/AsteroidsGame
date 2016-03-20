@@ -1,3 +1,4 @@
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.InetAddress;
@@ -70,6 +71,7 @@ public class GameServer {
 		} else {
 			clients.put(clientThread.getIdentifier(REQUIRE_UNIQUE_CLIENTS), new Starship("res/blank.cfg"));
 			System.out.println("Welcome, " + address.getHostName());
+			System.out.println(clientThread);
 			clientThread.out.println(clientThread.getIdentifier(REQUIRE_UNIQUE_CLIENTS));
 		}
 	}
