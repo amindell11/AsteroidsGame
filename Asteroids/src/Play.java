@@ -48,7 +48,7 @@ public class Play extends BasicGameState {
 	public void init(GameContainer container, StateBasedGame game)
 			throws SlickException {
 		background = new Image("res/stars.jpg");
-		ship = new Starship("res/shipTemplate2.cfg");
+		ship = new Starship("res/shipTemplate.cfg");
 		score = 0;
 		level = 0;
 		levelTicks = 0;

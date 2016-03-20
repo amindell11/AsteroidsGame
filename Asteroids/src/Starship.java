@@ -99,9 +99,9 @@ public class Starship extends ExplodingGameObject {
 					turnSpeed += turnAcceleration * delta;
 				}
 			}
-			if (Math.abs(turnSpeed) > 0)
-				turnSpeed -= (Math.abs(turnSpeed) / turnSpeed) * turnDecay
-						* delta;
+			if (!(turningRight||turningLeft)&&Math.abs(turnSpeed) > 0)
+				turnSpeed *=turnDecay/delta;
+
 
 			if (accelerating && speed.length() < maxSpeed)
 				speed = speed.add(new Vector2f(getRotation())
