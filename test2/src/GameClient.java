@@ -1,17 +1,20 @@
-import java.awt.Font;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.InterfaceAddress;
+import java.net.NetworkInterface;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
-
-import javax.swing.plaf.synth.SynthSpinnerUI;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.BasicGame;
@@ -20,8 +23,6 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
-import org.newdawn.slick.TrueTypeFont;
-import org.newdawn.slick.geom.Vector2f;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -65,6 +66,69 @@ public class GameClient extends BasicGame {
 		background=new Image("res/stars.jpg");
 		clients = new HashMap<>();
 		input = new Input(400);
+	}
+	public static boolean testConnection(String hostName, int port, int timeOut) {
+		try {
+			Socket s=new Socket();
+			s.connect(new InetSocketAddress(hostName, port), timeOut);
+			while(true){
+			System.out.println(s.isClosed());
+			}
+			//closeSocket(s);
+			//return true;
+		} catch (IOException e) {
+			return false;
+		}
+	}
+
+	public ArrayList<String> getOpenServers() {
+		try {
+			List<String> openServers = new ArrayList<>();
+			String line;
+			System.setProperty("java.net.preferIPv4Stack" , "true");
+			InetAddress broadcast=null;
+			Enumeration<NetworkInterface> interfaces =
+				    NetworkInterface.getNetworkInterfaces();
+				while (interfaces.hasMoreElements()) {
+				  NetworkInterface networkInterface = interfaces.nextElement();
+				  if (networkInterface.isLoopback())
+				    continue;    // Don't want to broadcast to the loopback interface
+				  for (InterfaceAddress interfaceAddress :
+				           networkInterface.getInterfaceAddresses()) {
+				    broadcast = interfaceAddress.getBroadcast();
+				    if (broadcast == null)
+				      continue;
+				  }
+				}
+				System.out.println(broadcast.getHostAddress());
+			Runtime.getRuntime().exec("ping "+broadcast.getHostName());
+			Process p = Runtime.getRuntime().exec("arp -a");
+			BufferedReader in = new BufferedReader(new InputStreamReader(p.getInputStream()));
+			in.readLine();
+			in.readLine();
+			while ((line = in.readLine()) != null) {
+				String host = parseIpAddress(line);
+				System.out.println(host);
+		/*		if (testConnection(host, portNumber, 1000)) {
+					openServers.add(host);
+				}*/
+			}
+		} catch (Exception e) {
+
+		}
+		return null;
+	}
+
+	public static String parseIpAddress(String read) {
+		String IPADDRESS_PATTERN = "(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)";
+		Pattern pattern = Pattern.compile(IPADDRESS_PATTERN);
+		Matcher matcher = pattern.matcher(read);
+		if (matcher.find()) {
+			return matcher.group();
+		} else {
+			return "0.0.0.0";
+		}
+
 	}
 	public void openServer(){
 		try {
