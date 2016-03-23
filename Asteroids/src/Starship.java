@@ -149,7 +149,6 @@ public class Starship extends ExplodingGameObject {
 	@Override
 	protected boolean checkForCollision() {
 		if (alive) {
-			super.checkForCollision();
 			GameObject collidingWith = isCollidingWith(Play.getAsteroids());
 			if (collidingWith != null) {
 				return true;

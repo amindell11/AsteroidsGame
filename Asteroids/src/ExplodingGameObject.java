@@ -9,7 +9,7 @@ import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.StateBasedGame;
 
 
-public class ExplodingGameObject extends GameObject{
+public abstract class ExplodingGameObject extends GameObject{
 	protected boolean alive;
 	private SpriteSheet explosion;
 	private Animation explode;

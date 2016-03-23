@@ -74,8 +74,7 @@ public abstract class GameObject {
 			} else {
 				move();
 				wrapOnScreen();
-				Shape collisionTemp=getCollisionInstance().transform(Transform.createTranslateTransform(pos.getX()-width/2, pos.getY()-height/2));
-				collisionModel=collisionTemp.transform(Transform.createRotateTransform((float) Math.toRadians(getRotation()), pos.x,pos.y));
+				updateCollisionModel();
 			}
 	}
 
@@ -90,6 +89,10 @@ public abstract class GameObject {
 		if (pos.getY() /*+ height / 2 */< 0)
 			pos.set(pos.getX(), SetupClass.ScreenHeight);
 	}
+	private void updateCollisionModel(){
+		Shape collisionTemp=getCollisionInstance().transform(Transform.createTranslateTransform(pos.getX()-width/2, pos.getY()-height/2));
+		collisionModel=collisionTemp.transform(Transform.createRotateTransform((float) Math.toRadians(getRotation()), pos.x,pos.y));
+	}
 
 	// CHANGE POS BY SPEED
 	private void move() {
@@ -100,9 +103,7 @@ public abstract class GameObject {
 	 * checkForCollision implemented in subclasses define which objects to
 	 * collide with should call isCollidingWith for collidable objects/lists
 	 */
-	protected boolean checkForCollision() {
-		return false;
-	}
+	protected abstract boolean checkForCollision();
 
 	/**
 	 * isCollidingWith checks for collision with a single other GameObject

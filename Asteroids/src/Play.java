@@ -89,7 +89,7 @@ public class Play extends BasicGameState {
 
 	// RENDER HUD
 	private void renderHUD(GameContainer gc, StateBasedGame sbg, Graphics g) {
-		g.drawString("Score: " + score, SetupClass.ScreenWidth-100,
+		g.drawString("Score: " + score, SetupClass.ScreenWidth - 100,
 				SetupClass.ScreenHeight / 70); // draw Score
 
 		if (levelTicks < 5)
@@ -111,16 +111,18 @@ public class Play extends BasicGameState {
 			asteroid.render(gc, sbg, g);
 		}
 	}
+
 	// UPDATE
 	@Override
 	public void update(GameContainer gc, StateBasedGame sbg, int delta)
 			throws SlickException {
-		if(isGameOver)sbg.enterState(SetupClass.GAME_OVER);
+		if (isGameOver)
+			sbg.enterState(SetupClass.GAME_OVER);
 		getInput(gc);
 		if (!isPaused) {
 			purgeInactiveObjects();
 			addPendingAsteroids();
-			if (isLevelClear()){
+			if (isLevelClear()) {
 				makeNewLevel();
 			}
 			updateShip(gc, sbg, delta);
@@ -156,18 +158,13 @@ public class Play extends BasicGameState {
 
 	// UPDATE SHIP
 	private void updateShip(GameContainer gc, StateBasedGame sbg, int delta) {
-		getInput(gc);
 		ship.update(gc, sbg, delta);
 	}
 
 	// UPDATE ASTEROIDS
 	private void updateAsteroids(GameContainer gc, StateBasedGame sbg, int delta) {
-		if (listOfAsteroids.isEmpty())
-			makeNewLevel();
-		else {
-			for (GameObject asteroid : listOfAsteroids) {
-				asteroid.update(gc, sbg, delta);
-			}
+		for (GameObject asteroid : listOfAsteroids) {
+			asteroid.update(gc, sbg, delta);
 		}
 	}
 
