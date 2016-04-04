@@ -8,6 +8,7 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Scanner;
 
 import javax.swing.plaf.synth.SynthSpinnerUI;
 
@@ -19,11 +20,13 @@ public class GameServer {
 	static Gson jsonParser;
 	HashMap<String, GameObject> clients;
 	int port;
+	String name;
 	static final boolean REQUIRE_UNIQUE_CLIENTS = false;
 	ServerSocket serverSocket = null;
 
-	public GameServer(int port) {
+	public GameServer(int port,String name) {
 		this.port = port;
+		this.name=name;
 		init();
 	}
 
@@ -72,7 +75,7 @@ public class GameServer {
 			clients.put(clientThread.getIdentifier(REQUIRE_UNIQUE_CLIENTS), new Starship("res/blank.cfg"));
 			System.out.println("Welcome, " + address.getHostName());
 			System.out.println(clientThread);
-			clientThread.out.println(clientThread.getIdentifier(REQUIRE_UNIQUE_CLIENTS));
+			clientThread.out.println("GAMESERVER:"+name);
 		}
 	}
 
@@ -111,7 +114,10 @@ public class GameServer {
 	}
 
 	public static void main(String[] arguments) {
-		GameServer server = new GameServer(8000);
+		Scanner in=new Scanner(System.in);
+		System.out.println("Please enter a name for the server: ");
+		String s=in.nextLine();
+		GameServer server = new GameServer(8000,s);
 		while (true) {
 			server.update();
 		}

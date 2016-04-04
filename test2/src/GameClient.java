@@ -67,23 +67,31 @@ public class GameClient extends BasicGame {
 		clients = new HashMap<>();
 		input = new Input(400);
 	}
-	public static boolean testConnection(String hostName, int port, int timeOut) {
+	public static String testConnection(String hostName, int port, int connectTimeOut,int recieveTimeOut) {
 		try {
 			Socket s=new Socket();
-			s.connect(new InetSocketAddress(hostName, port), timeOut);
-			while(true){
-			System.out.println(s.isClosed());
+			s.connect(new InetSocketAddress(hostName, port), connectTimeOut);
+			BufferedReader br=new BufferedReader(new InputStreamReader(s.getInputStream()));
+			long startTime=System.currentTimeMillis();
+			while(System.currentTimeMillis()-startTime<recieveTimeOut){
+				System.out.print('.');
+				if(br.ready()){
+					String string=br.readLine();
+					System.out.println(string);
+					if(string.contains("GAMESERVER:"))
+					return string.replace("GAMESERVER:", "");
+				}
 			}
-			//closeSocket(s);
-			//return true;
+			s.close();
+			return null;
 		} catch (IOException e) {
-			return false;
+			return null;
 		}
 	}
 
-	public ArrayList<String> getOpenServers() {
+	public HashMap<String,String> getOpenServers() {
 		try {
-			List<String> openServers = new ArrayList<>();
+			HashMap<String,String> openServers = new HashMap<>();
 			String line;
 			System.setProperty("java.net.preferIPv4Stack" , "true");
 			InetAddress broadcast=null;
@@ -109,10 +117,12 @@ public class GameClient extends BasicGame {
 			while ((line = in.readLine()) != null) {
 				String host = parseIpAddress(line);
 				System.out.println(host);
-		/*		if (testConnection(host, portNumber, 1000)) {
-					openServers.add(host);
-				}*/
+				String testConnection = testConnection(host, portNumber, 15,15);
+				if (testConnection!=null) {
+					openServers.put(testConnection,host);
+				}
 			}
+			return openServers;
 		} catch (Exception e) {
 
 		}
@@ -131,6 +141,7 @@ public class GameClient extends BasicGame {
 
 	}
 	public void openServer(){
+		System.out.println(getOpenServers());
 		try {
 			if (sameComputer){
 				hostName = InetAddress.getLocalHost().getHostAddress();
