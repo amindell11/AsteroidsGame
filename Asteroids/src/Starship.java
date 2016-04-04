@@ -52,12 +52,16 @@ public class Starship extends ExplodingGameObject {
 				.getProperty("turnAcceleration"));
 		turnDecay = Float.parseFloat(template.getProperty("turnDecay"));
 		int shotDelay = Integer.parseInt(template.getProperty("shotDelay"));
-		String ammo = template.getProperty("ammo");
+		int ammoNumber=1;
+		String ammo=null;
 		guns = new ArrayList<>();
+		while((ammo = template.getProperty("ammo"+ammoNumber))!= null){
+			
+		}
 		guns.add(new Gun(new Missile(new Image("res/missile 1.png"), 1.2f, 1f,
-				3, .5f), 4000));
+				3, .5f), 1000));
 		guns.add(new Gun(new Projectile(new Image("res/Beam1.png"), 30f, .5f),
-				500));
+				80));
 		ObjectImage = iconEnginesOff;
 		maxTurnVel= Float.parseFloat(template.getProperty("maxTurnVel"));
 		collisionPoints = new Gson().fromJson(
