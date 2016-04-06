@@ -33,6 +33,7 @@ public class Play extends BasicGameState {
 	private boolean isPaused;
 	private int updateCounter = 0;
 	private Image background;
+	private Button shipButton;
 
 	// UTILITY
 	public Play(int play) {
@@ -46,9 +47,15 @@ public class Play extends BasicGameState {
 	// INIT
 	@Override
 	public void init(GameContainer container, StateBasedGame game)
-			throws SlickException {
+			throws SlickException {	
+		shipButton=new Button(new Image("res/Ship 1/Ship.png"),0,0,150,100, new Runnable(){
+			@Override
+			public void run() {
+				System.out.println("clicked");		
+			}	
+		});
 		background = new Image("res/stars.jpg");
-		ship = new Starship("res/shipTemplate.cfg");
+		ship = new Starship("res/Ship 3/shipTemplate2.cfg");
 		score = 0;
 		level = 0;
 		levelTicks = 0;
@@ -65,6 +72,7 @@ public class Play extends BasicGameState {
 		renderShip(gc, sbg, g);
 		renderAsteroids(gc, sbg, g);
 		renderHUD(gc, sbg, g);
+		shipButton.render(gc, sbg, g);
 		if (SetupClass.isDEBUGGING)
 			renderDEBUG(gc, sbg, g);
 	}

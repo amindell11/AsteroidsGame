@@ -28,7 +28,8 @@ public class EchoThread extends Thread {
 	public void run() {
 
 		String line;
-		while (!isInterrupted()) {
+		while (!isInterrupted()&&!out.checkError()) {
+			//System.out.println(out.checkError());
 			try {
 				if (brinp.ready()) {
 					line = brinp.readLine();
@@ -43,6 +44,7 @@ public class EchoThread extends Thread {
 				return;
 			}
 		}
+		System.out.println("Goodbye "+getClientAddress());
 	}
 
 	public String getClientAddress() {
