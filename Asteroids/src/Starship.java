@@ -8,9 +8,7 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
-import org.newdawn.slick.geom.Circle;
 import org.newdawn.slick.geom.Polygon;
-import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.StateBasedGame;
@@ -61,7 +59,7 @@ public class Starship extends ExplodingGameObject {
 		guns.add(new Gun(new Missile(new Image("res/missile 1.png"), 1.2f, 1f,
 				3, .5f), 1000));
 		guns.add(new Gun(new Projectile(new Image("res/Beam1.png"), 30f, .5f),
-				80));
+				400));
 		ObjectImage = iconEnginesOff;
 		maxTurnVel= Float.parseFloat(template.getProperty("maxTurnVel"));
 		collisionPoints = new Gson().fromJson(

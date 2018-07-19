@@ -26,8 +26,8 @@ public class Play extends BasicGameState {
 	private static Starship ship;
 	private static ArrayList<GameObject> listOfAsteroids;
 	private static ArrayList<Asteroid> pendingAsteroids;
-	private int score;
-	private int level;
+	private static int score;
+	private static int level;
 	private double levelTicks;
 	private static boolean isGameOver;
 	private boolean isPaused;
@@ -46,16 +46,15 @@ public class Play extends BasicGameState {
 
 	// INIT
 	@Override
-	public void init(GameContainer container, StateBasedGame game)
-			throws SlickException {	
-		shipButton=new Button(new Image("res/Ship 1/Ship.png"),0,0,150,100, new Runnable(){
+	public void init(GameContainer container, StateBasedGame game) throws SlickException {
+		shipButton = new Button(new Image("res/Ship 1/Ship.png"), 0, 0, 150, 100, new Runnable() {
 			@Override
 			public void run() {
-				System.out.println("clicked");		
-			}	
+				System.out.println("clicked");
+			}
 		});
 		background = new Image("res/stars.jpg");
-		ship = new Starship("res/Ship 3/shipTemplate2.cfg");
+		ship = new Starship(StarshipClass.SALAMANDER.path);
 		score = 0;
 		level = 0;
 		levelTicks = 0;
@@ -66,19 +65,17 @@ public class Play extends BasicGameState {
 
 	// RENDER
 	@Override
-	public void render(GameContainer gc, StateBasedGame sbg, Graphics g)
-			throws SlickException {
+	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
 		renderBackground(gc, sbg, g);
 		renderShip(gc, sbg, g);
 		renderAsteroids(gc, sbg, g);
 		renderHUD(gc, sbg, g);
-		shipButton.render(gc, sbg, g);
+		// shipButton.render(gc, sbg, g);
 		if (SetupClass.isDEBUGGING)
 			renderDEBUG(gc, sbg, g);
 	}
 
-	private void renderBackground(GameContainer gc, StateBasedGame sbg,
-			Graphics g) {
+	private void renderBackground(GameContainer gc, StateBasedGame sbg, Graphics g) {
 		background.draw();
 	}
 
@@ -87,9 +84,7 @@ public class Play extends BasicGameState {
 		System.out.println("===========================================");
 		System.out.print("Update " + updateCounter + "\t");
 		System.out.print("FPS:  " + gc.getFPS() + "\t");
-		System.out.println("upTime:  "
-				+ (gc.getFPS() == 0 ? 0 : updateCounter / gc.getFPS())
-				+ " seconds\t");
+		System.out.println("upTime:  " + (gc.getFPS() == 0 ? 0 : updateCounter / gc.getFPS()) + " seconds\t");
 		System.out.println("isPaused: " + isPaused + "\t");
 		System.out.println("Level: " + level + "\t");
 		System.out.println("Score: " + score + "\t");
@@ -97,24 +92,21 @@ public class Play extends BasicGameState {
 
 	// RENDER HUD
 	private void renderHUD(GameContainer gc, StateBasedGame sbg, Graphics g) {
-		g.drawString("Score: " + score, SetupClass.ScreenWidth - 100,
-				SetupClass.ScreenHeight / 70); // draw Score
+		g.drawString("Score: " + score, SetupClass.ScreenWidth - 100, SetupClass.ScreenHeight / 70); // draw Score
 
 		if (levelTicks < 5)
-			g.drawString("Score: " + score, SetupClass.ScreenWidth,
-					SetupClass.ScreenHeight / 100); // draw Level number if it
-													// is a new level
+			g.drawString("Score: " + score, SetupClass.ScreenWidth, SetupClass.ScreenHeight / 100); // draw Level number
+																									// if it
+																									// is a new level
 	}
 
 	// RENDER SHIP
-	public void renderShip(GameContainer gc, StateBasedGame sbg, Graphics g)
-			throws SlickException {
+	public void renderShip(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
 		ship.render(gc, sbg, g);
 	}
 
 	// RENDER ASTEROIDS
-	public void renderAsteroids(GameContainer gc, StateBasedGame sbg, Graphics g)
-			throws SlickException {
+	public void renderAsteroids(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
 		for (GameObject asteroid : listOfAsteroids) {
 			asteroid.render(gc, sbg, g);
 		}
@@ -122,8 +114,7 @@ public class Play extends BasicGameState {
 
 	// UPDATE
 	@Override
-	public void update(GameContainer gc, StateBasedGame sbg, int delta)
-			throws SlickException {
+	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
 		if (isGameOver)
 			sbg.enterState(SetupClass.GAME_OVER);
 		getInput(gc);
@@ -196,7 +187,11 @@ public class Play extends BasicGameState {
 		if (in.isKeyDown(Input.KEY_S))
 			ship.BackKeyPressed();
 	}
-
+	
+	public static void addToScore(int scoreAdd, GameObject augmenter) {
+		score+=scoreAdd;
+	}
+	
 	// CREATE NEW LEVEL
 	private void makeNewLevel() {
 		levelTicks = 0;

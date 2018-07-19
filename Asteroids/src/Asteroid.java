@@ -57,19 +57,11 @@ public class Asteroid extends ExplodingGameObject {
 		return new Vector2f(Math.random() * 360)
 				.scale((float) (Math.random() * (MaxVelocity - MinVelocity) + MinVelocity));
 	}
+	
 	private static int getRandomCoord(Random rnd,int min, int max){
 		return rnd.nextInt(max+min)+min;
 	}
-	private static int getRandomWithExclusion(Random rnd, int start, int end, int... exclude) {
-		int random = start + rnd.nextInt(end - start + 1 - exclude.length);
-		for (int ex : exclude) {
-			if (random < ex) {
-				break;
-			}
-			random++;
-		}
-		return random;
-	}
+
 
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) {
 		rotate((float) angularVel * delta);
@@ -86,9 +78,14 @@ public class Asteroid extends ExplodingGameObject {
 
 	@Override
 	protected void die() {
-		if (alive && hitsLeft > 1)
+		if (alive && hitsLeft > 1) {
 			splitAsteroid();
+		}
+		Play.addToScore(hitsLeft*100, this);
 		super.die();
+	}
+	public int getHitsLeft() {
+		return hitsLeft;
 	}
 
 	public void splitAsteroid() {
